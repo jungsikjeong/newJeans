@@ -30,7 +30,7 @@ export const StyleHeader = styled.header`
   align-items: center;
   justify-content: space-between;
   background: #f9f5f2;
-  height: 60px;
+  height: 40px;
   padding: 0px 10px;
 `;
 
@@ -40,12 +40,12 @@ export const Logo = styled.div`
   }
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    /* display: none; */
+    font-size: 1.5rem;
   }
+
   display: flex;
   align-items: center;
   height: 100%;
-
   font-size: 3rem;
   font-weight: bold;
   letter-spacing: -3px;
@@ -73,6 +73,9 @@ export const Item = styled.li`
   cursor: pointer;
 
   ::before {
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      margin: 0;
+    }
     content: '';
     display: block;
     width: 20px;
@@ -102,6 +105,10 @@ export const Item = styled.li`
 `;
 
 export const Login = styled.div`
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    font-size: 20px;
+  }
+
   display: flex;
   text-align: center;
   font-size: 25px;
@@ -125,7 +132,7 @@ export const Login = styled.div`
 
 export const Menu = styled.div`
   position: absolute;
-  top: 60px;
+  top: 40px;
   left: 0;
   width: 100%;
 

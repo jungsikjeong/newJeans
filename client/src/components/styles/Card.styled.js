@@ -21,6 +21,7 @@ export const Row = styled.div`
 
 export const Col = styled.div`
   position: relative;
+
   width: 100%;
   height: 100%;
 
