@@ -31,12 +31,21 @@ export const StyleHeader = styled.header`
   justify-content: space-between;
   background: #f9f5f2;
   height: 60px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 0px 10px;
 `;
 
 export const Logo = styled.div`
+  @media (max-width: ${({ theme }) => theme.tablet}) {
+    font-size: 2rem;
+  }
+
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    /* display: none; */
+  }
+  display: flex;
+  align-items: center;
   height: 100%;
+
   font-size: 3rem;
   font-weight: bold;
   letter-spacing: -3px;
@@ -44,30 +53,26 @@ export const Logo = styled.div`
 `;
 
 export const List = styled.ul`
+  @media (max-width: ${({ theme }) => theme.tablet}) {
+    padding: 0;
+  }
+
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding-right: 50px;
-  font-size: 25px;
 `;
 
 export const Item = styled.li`
+  display: flex;
+  align-items: center;
   margin-right: 10px;
+  font-size: 25px;
+  cursor: pointer;
 
-  span {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-
-    &:hover {
-      font-weight: bold;
-      transition-duration: 0.3s;
-    }
-  }
-
-  & span::before {
+  ::before {
     content: '';
     display: block;
     width: 20px;
@@ -75,6 +80,24 @@ export const Item = styled.li`
     background: ${(props) => props.color};
     border-radius: 50%;
     margin-right: 5px;
+  }
+
+  span {
+    @media (max-width: ${({ theme }) => theme.tablet}) {
+      font-size: 20px;
+    }
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      display: none;
+    }
+
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      font-weight: bold;
+      transition-duration: 0.3s;
+    }
   }
 `;
 
