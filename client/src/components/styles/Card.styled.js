@@ -29,6 +29,8 @@ export const Col = styled.div`
     .fade-item {
       display: block;
     }
+
+    color: white;
   }
 `;
 
@@ -38,7 +40,7 @@ export const InnerItem = styled.div`
   width: 100%;
   top: 0;
   bottom: 0px;
-  background: #f2fe8a;
+  background: rgba(0, 0, 0, 0.4);
 
   div {
     text-align: center;
