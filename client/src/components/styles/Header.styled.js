@@ -25,12 +25,16 @@ export const menuCloseFrames = keyframes`
 `;
 
 export const StyleHeader = styled.header`
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    height: 40px;
+  }
+
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: #f9f5f2;
-  height: 40px;
+  height: 60px;
   padding: 0px 10px;
 `;
 
@@ -131,12 +135,13 @@ export const Login = styled.div`
 `;
 
 export const Menu = styled.div`
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    top: 40px;
+  }
   position: absolute;
-  top: 40px;
+  top: 60px;
   left: 0;
   width: 100%;
-
-  /* height: 0%; */
   z-index: 2;
   background: #f9f5f2;
 
