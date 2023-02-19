@@ -45,7 +45,7 @@ const Header = () => {
         <Item color='#f7e600'>
           <span>민지</span>
         </Item>
-        <Item color='#F7FCFF'>
+        <Item color='#d8d2c6'>
           <span>해린</span>
         </Item>
         <Item color='#D0FC5C'>
@@ -57,8 +57,10 @@ const Header = () => {
       </List>
 
       <Login>
-        <div className='user-wrap' onClick={() => handleMenu()}>
+        <div className='user-wrap' onClick={() => navigate('/login')}>
           Login
+          {/* onClick={() => handleMenu()} */}
+          {/* 로그인시,About으로 변경할 예정*/}
         </div>
         <FiSearch className='search-icon' />
       </Login>

@@ -7,6 +7,8 @@ import Home from './components/Home';
 import Writer from './components/Writer';
 import MyPage from './components/MyPage';
 import Header from './components/Header';
+import Login from './components/Login';
+import Register from './components/Register';
 
 const theme = {
   colors: {
@@ -26,6 +28,8 @@ const App = () => {
         <Header />
         <Routes>
           <Route path='/' element={<Home />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
           <Route path='/writer' element={<Writer />} />
           <Route path='/mypage' element={<MyPage />} />
         </Routes>
