@@ -3,12 +3,12 @@ import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import GlobalStyles from './components/styles/Global';
-import Home from './components/Home';
-import Writer from './components/Writer';
-import MyPage from './components/MyPage';
 import Header from './components/Header';
-import Login from './components/Login';
+import MyPage from './components/MyPage';
 import Register from './components/Register';
+import Writer from './components/Writer';
+import Login from './components/Login';
+import Home from './components/Home';
 
 const theme = {
   colors: {

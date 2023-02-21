@@ -7,19 +7,21 @@ import {
   MenuItem,
   MenuList,
   StyleHeader,
-} from './styles/Header.styled';
+} from './Header.styled';
 
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
 import { useState } from 'react';
-import { Button } from './styles/Button.styled';
+import { Button } from '../styles/Button.styled';
 
 const Header = () => {
   const [isMenu, setIsMenu] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
+  // 메뉴 open,close
   const handleMenu = () => {
     setIsMenu(!isMenu);
 
@@ -33,7 +35,11 @@ const Header = () => {
   };
 
   return (
-    <StyleHeader>
+    <StyleHeader
+      disabled={
+        location.pathname === '/login' || location.pathname === '/register'
+      }
+    >
       <Logo onClick={() => navigate('/')}>
         <h1>NewJeans</h1>
       </Logo>

@@ -1,5 +1,5 @@
 import { createRef, useEffect, useState } from 'react';
-import { CardFooter, Col, InnerItem, Row } from './styles/Card.styled';
+import { CardFooter, Col, InnerItem, Row } from './Card.styled';
 
 const Card = () => {
   const [list, setList] = useState([
@@ -20,11 +20,6 @@ const Card = () => {
     }
   }, []);
 
-  //   FFBFBF
-  // f7e600
-  // F7FCFF
-  // D0FC5C
-  // 9EE0FF
   return (
     <Row>
       {list.map((item, index) => (

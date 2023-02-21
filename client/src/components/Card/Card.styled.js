@@ -21,7 +21,6 @@ export const Row = styled.div`
 
 export const Col = styled.div`
   position: relative;
-
   width: 100%;
   height: 100%;
 
@@ -63,8 +62,8 @@ export const CardFooter = styled.div`
   width: 100%;
   position: absolute;
   bottom: 30px;
-  text-align: center;
   margin-bottom: 10px;
+  text-align: center;
   font-size: 15px;
   font-weight: 700;
 `;

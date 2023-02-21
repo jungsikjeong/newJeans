@@ -30,7 +30,7 @@ export const StyleHeader = styled.header`
   }
 
   position: relative;
-  display: flex;
+  display: ${(props) => (props.disabled ? 'none' : 'flex')};
   align-items: center;
   justify-content: space-between;
   background: #f9f5f2;
