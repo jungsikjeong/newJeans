@@ -1,7 +1,8 @@
-import * as S from '../styles/Auth.styled';
+import * as S from '../common/Auth.styled';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
+import axios from 'axios';
 
 import Button from '../Button';
 import SliderCompo from '../Slider';
@@ -19,6 +20,10 @@ const Register = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
   };
 
   useEffect(() => {
@@ -76,6 +81,7 @@ const Register = () => {
               value={formData.password}
               onChange={(e) => handleChange(e)}
             />
+            <p class='alert'>비밀번호는 6글자 이상 지어주세요</p>
           </S.FormGroup>
           <Button
             className='register'

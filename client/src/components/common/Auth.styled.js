@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 350px;
   }
+  background-color: white;
   position: relative;
   width: 500px;
   margin: auto;

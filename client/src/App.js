@@ -2,13 +2,14 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
-import GlobalStyles from './components/styles/Global';
+import GlobalStyles from './components/common/Global';
 import Header from './components/Header';
 import MyPage from './components/MyPage';
 import Register from './components/Register';
 import Writer from './components/Writer';
 import Login from './components/Login';
 import Home from './components/Home';
+import Search from './components/Search/Search';
 
 const theme = {
   colors: {
@@ -28,6 +29,7 @@ const App = () => {
         <Header />
         <Routes>
           <Route path='/' element={<Home />} />
+          <Route path='/search' element={<Search />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/writer' element={<Writer />} />

@@ -12,7 +12,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
 import { useState } from 'react';
-import { Button } from '../styles/Button.styled';
+import { Button } from '../common/Button.styled';
 
 const Header = () => {
   const [isMenu, setIsMenu] = useState(false);
@@ -68,7 +68,12 @@ const Header = () => {
           {/* onClick={() => handleMenu()} */}
           {/* 로그인시,About으로 변경할 예정*/}
         </div>
-        <FiSearch className='search-icon' />
+        <div>
+          <FiSearch
+            className='search-icon'
+            onClick={() => navigate('/search')}
+          />
+        </div>
       </Login>
 
       {isOpen && (
@@ -90,7 +95,7 @@ const Header = () => {
             <MenuItem>
               <Button
                 backgroundColor='#FFAA40'
-                onClick={() => navigate('/mypage')}
+                // onClick={() => navigate('/mypage')}
               >
                 마이페이지
               </Button>

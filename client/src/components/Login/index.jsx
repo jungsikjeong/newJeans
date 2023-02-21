@@ -1,4 +1,4 @@
-import * as S from '../styles/Auth.styled';
+import * as S from '../common/Auth.styled';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { GrClose } from 'react-icons/gr';

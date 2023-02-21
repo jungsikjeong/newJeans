@@ -1,5 +1,5 @@
 import { createRef, useEffect, useState } from 'react';
-import { CardFooter, Col, InnerItem, Row } from './Card.styled';
+import * as S from '../common/Card.styled';
 
 const Card = () => {
   const [list, setList] = useState([
@@ -21,23 +21,23 @@ const Card = () => {
   }, []);
 
   return (
-    <Row>
+    <S.Row>
       {list.map((item, index) => (
-        <Col className='fade-col' ref={fadeCol[index]} key={index}>
+        <S.Col className='fade-col' ref={fadeCol[index]} key={index}>
           <img
             src='http://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/08/19/c5cd0937-06c6-4f4c-9f22-660c5ec8adfb.jpg'
             alt=''
           />
-          <InnerItem className='fade-item'>
+          <S.InnerItem className='fade-item'>
             <div>
               <h4>민지입니다</h4>
               <p>어텐션부터시작해서 너무 팬입니다.</p>
             </div>
-          </InnerItem>
-          <CardFooter>23.1.28</CardFooter>
-        </Col>
+          </S.InnerItem>
+          <S.CardFooter>23.1.28</S.CardFooter>
+        </S.Col>
       ))}
-    </Row>
+    </S.Row>
   );
 };
 
