@@ -1,29 +1,85 @@
 import * as S from '../common/Auth.styled';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { GrClose } from 'react-icons/gr';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { GrClose } from 'react-icons/gr';
+import img1 from '../../assets/images/민지.jpg';
 
 import Button from '../Button';
 import SliderCompo from '../Slider';
+
 const Register = () => {
   const [formData, setFormData] = useState({
     userId: '',
     nickname: '',
     password: '',
   });
-
+  const [message, setMessage] = useState('');
   const { userId, nickname, password } = formData;
   const [styles, setStyles] = useState(false);
+  const [avatar, setAvatar] = useState(img1);
 
+  const inputRef = useRef([]);
   const navigator = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setMessage('');
+  };
+
+  const handleAvatarChange = (data) => {
+    setAvatar(data.src);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!userId || userId === '') {
+      inputRef.current[0].focus();
+      return setMessage('유저 아이디를 입력해주세요');
+    }
+
+    if (userId.length > 13) {
+      inputRef.current[0].focus();
+      return setMessage('아이디가 너무 길어요!(max:12)');
+    }
+    if (!nickname || nickname === '') {
+      inputRef.current[1].focus();
+      return setMessage('닉네임을 입력해주세요');
+    }
+    if (nickname.length === 1 || nickname.length >= 7) {
+      inputRef.current[1].focus();
+      return setMessage('닉네임은 2~6글자로 해주세요');
+    }
+    if (password.length < 6) {
+      inputRef.current[2].focus();
+      return setMessage('비밀번호는 6글자이상 입력해주세요');
+    }
+    if (password.length > 6) {
+      inputRef.current[2].focus();
+      return setMessage('비밀번호는 6글자까지만 입력해주세요');
+    }
+
+    axios({
+      method: 'post',
+      url: '/api/auth/register',
+      data: {
+        userId,
+        nickname,
+        password,
+        avatar,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        // if (res.data?.success === true) {
+        //   navigator('/login');
+        // }
+      })
+      .catch((err) => {
+        console.log(err.response.data.errors);
+        setMessage(err.response.data.errors[0].msg);
+      });
   };
 
   useEffect(() => {
@@ -42,8 +98,10 @@ const Register = () => {
         <S.IconWrap onClick={() => navigator('/')}>
           <GrClose />
         </S.IconWrap>
-        <SliderCompo />
-        <S.Form>
+
+        <SliderCompo handleAvatarChange={handleAvatarChange} />
+
+        <S.Form onSubmit={(e) => handleSubmit(e)}>
           <S.FormGroup>
             <S.Label htmlFor='user-id' userId={formData.userId}>
               ID
@@ -54,6 +112,7 @@ const Register = () => {
               name='userId'
               value={formData.userId}
               onChange={(e) => handleChange(e)}
+              ref={(el) => (inputRef.current[0] = el)}
             />
           </S.FormGroup>
 
@@ -67,6 +126,7 @@ const Register = () => {
               name='nickname'
               value={formData.nickname}
               onChange={(e) => handleChange(e)}
+              ref={(el) => (inputRef.current[1] = el)}
             />
           </S.FormGroup>
 
@@ -80,8 +140,10 @@ const Register = () => {
               name='password'
               value={formData.password}
               onChange={(e) => handleChange(e)}
+              ref={(el) => (inputRef.current[2] = el)}
             />
-            <p class='alert'>비밀번호는 6글자 이상 지어주세요</p>
+
+            {message && <p className='alert'>{message}</p>}
           </S.FormGroup>
           <Button
             className='register'

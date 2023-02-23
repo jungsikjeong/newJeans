@@ -112,3 +112,10 @@ export const Guide = styled.div`
     }
   }
 `;
+
+export const Message = styled.p`
+  margin-top: 12px;
+  font-size: 12px;
+  text-align: center;
+  color: tomato;
+`;

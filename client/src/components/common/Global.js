@@ -35,13 +35,13 @@ a{
     width:100px;
     top:-480px;
     right:150px;
-    font-size:12px;
+    font-size:10px;
   }
   text-align:center;
   width:130px;
   position: absolute;
-  color: #f00;
-  font-size: 16px;
+  color: tomato;
+  font-size: 14px;
   right: 280px;
   top: -400px;
   z-index: 200;
@@ -49,8 +49,9 @@ a{
   background: #fff;
   box-shadow:0 3px 5px rgba(0,0,0,.2);
   border-radius:50%;
-  opacity: 1;
-  transform: scale(1);
+  opacity: 0;
+  transform: scale(0);
+  animation: alert-fade-in  400ms ease-out forwards;
   transition:.4s .6s linear;
   &:after, &:before{
     @media (max-width: ${({ theme }) => theme.mobile}) {
@@ -78,6 +79,18 @@ a{
   }
 }
 
+@keyframes alert-fade-in {
+0%{
+  opacity: 0;
+  transform: scale(0);
+}
+
+100%{
+  opacity: 1;
+  transform: scale(1);
+}
+
+}
 
 
 @keyframes fade-in {

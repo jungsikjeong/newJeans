@@ -35,14 +35,17 @@ const data = [
     src: img5,
   },
 ];
-const SliderCompo = () => {
+
+const SliderCompo = ({ handleAvatarChange }) => {
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    afterChange: (current) => handleAvatarChange(data[current]),
   };
+
   return (
     <S.Container>
       <S.StyleSlider {...settings}>
@@ -52,7 +55,6 @@ const SliderCompo = () => {
             <h4>
               Welcome,<span style={{ color: 'tomato' }}>{i.name}!</span>
             </h4>
-            {/* <p>드래그로 멤버를 선택해주세요.</p> */}
           </S.WrapperImage>
         ))}
       </S.StyleSlider>

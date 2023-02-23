@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
+const { passport } = require('./middleware/auth');
 const path = require('path');
 
 const app = express();
