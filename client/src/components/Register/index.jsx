@@ -1,12 +1,13 @@
 import * as S from '../common/Auth.styled';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
 import img1 from '../../assets/images/민지.jpg';
 
 import Button from '../Button';
 import SliderCompo from '../Slider';
+import { useSelector } from 'react-redux';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +22,8 @@ const Register = () => {
 
   const inputRef = useRef([]);
   const navigator = useNavigate();
+
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -90,6 +93,10 @@ const Register = () => {
       setStyles(false);
     }
   }, [userId, nickname, password]);
+
+  if (isAuthenticated) {
+    return <Navigate to='/' />;
+  }
 
   return (
     <S.Container>

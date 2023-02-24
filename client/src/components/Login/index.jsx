@@ -1,9 +1,9 @@
 import * as S from '../common/Auth.styled';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
 import { loadUser } from '../../store';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '../Button';
 import axios from 'axios';
@@ -20,6 +20,8 @@ const Login = () => {
 
   const { userId, password } = formData;
   const [styles, setStyles] = useState(false);
+
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const inputRef = useRef([]);
   const navigator = useNavigate();
@@ -83,6 +85,10 @@ const Login = () => {
       setStyles(false);
     }
   }, [userId, password]);
+
+  if (isAuthenticated) {
+    return <Navigate to='/' />;
+  }
 
   return (
     <S.Container>
