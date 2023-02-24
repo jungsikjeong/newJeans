@@ -8,18 +8,26 @@ const { check, validationResult } = require('express-validator');
 const User = require('../../models/User');
 
 // user by token
-router.get(
-  '/',
-  passport.authenticate('jwt', { session: false }),
-  (req, res, next) => {
-    console.log(req);
-    console.log(req.user);
-    res.json({
-      message: 'You made it to the secure route',
-      user: req.user,
-      token: req.query.secret_token,
-    });
-  }
+router.get('/', async (req, res, next) =>
+  passport.authenticate('jwt', { session: false }, async (err, user, info) => {
+    console.log(req.header('Authorization'));
+    // passport.jwt token === undefined
+    if (info) {
+      return res
+        .status(401)
+        .json([{ msg: 'JsonWebTokenError: invalid signature' }]);
+    }
+
+    // token && user find
+    if (user) {
+      const findUser = await User.findById({ _id: user._id });
+
+      return res.json({
+        success: true,
+        user: findUser,
+      });
+    }
+  })(req, res, next)
 );
 
 // 회원가입
@@ -42,6 +50,11 @@ router.post('/login', async (req, res, next) => {
         const error = new Error('An error occurred.');
 
         return next(error);
+      }
+
+      //  passport에서 인증 실패한 메시지가 나옴
+      if (info) {
+        return res.status(401).json(info);
       }
 
       if (!user) {

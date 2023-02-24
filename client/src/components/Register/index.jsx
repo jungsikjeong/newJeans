@@ -71,10 +71,9 @@ const Register = () => {
       },
     })
       .then((res) => {
-        console.log(res.data);
-        // if (res.data?.success === true) {
-        //   navigator('/login');
-        // }
+        if (res.data?.success === true) {
+          navigator('/login');
+        }
       })
       .catch((err) => {
         console.log(err.response.data.errors);

@@ -11,6 +11,8 @@ import Login from './components/Login';
 import Home from './components/Home';
 import Search from './components/Search/Search';
 
+import setAuthToken from './utils/setAuthToken';
+
 const theme = {
   colors: {
     // header: '#ebfbff',
@@ -22,6 +24,9 @@ const theme = {
 };
 
 const App = () => {
+  if (localStorage.token) {
+    setAuthToken(localStorage.token);
+  }
   return (
     <>
       <ThemeProvider theme={theme}>

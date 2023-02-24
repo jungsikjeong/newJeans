@@ -5,17 +5,17 @@ const localStrategy = require('passport-local').Strategy;
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
+passport.initialize();
+
 passport.use(
-  'jwt',
   new JWTStrategy(
     {
       secretOrKey: process.env.JWT_SECRET_KEY,
-      jwtFromRequest: ExtractJWT.fromUrlQueryParameter('secret_token'),
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     },
+
     async (token, done) => {
       try {
-        // 콘솔에안찍힘
-        console.log('토크으으은');
         return done(null, token.user);
       } catch (error) {
         done(error);
@@ -93,14 +93,12 @@ passport.use(
           });
         }
 
-        return done(null, user, { msg: '로그인 성공' });
+        return done(null, user);
       } catch (error) {
         return done(error);
       }
     }
   )
 );
-
-passport.initialize();
 
 module.exports = { passport };
