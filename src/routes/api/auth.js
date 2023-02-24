@@ -78,9 +78,4 @@ router.post('/login', async (req, res, next) => {
   })(req, res, next);
 });
 
-/** logout */
-router.get('/logout', (req, res) => {
-  console.log(req.header('Authorization'));
-});
-
 module.exports = router;

@@ -11,9 +11,10 @@ import Login from './components/Login';
 import Home from './components/Home';
 import Search from './components/Search/Search';
 
-import store, { loadUser } from './store';
+import { loadUser } from './store';
 import setAuthToken from './utils/setAuthToken';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
 const theme = {
   colors: {
@@ -26,14 +27,16 @@ const theme = {
 };
 
 const App = () => {
-  // if (localStorage.token) {
-  //   setAuthToken(JSON.parse(localStorage.token));
-  // }
-  // useEffect(() => {
-  //   axios
-  //     .get('/api/auth')
-  //     .then((res) => store.dispatch(loadUser(res.data.user)));
-  // }, []);
+  const dispatch = useDispatch();
+
+  const token = JSON.parse(localStorage.getItem('token'));
+
+  useEffect(() => {
+    if (token) {
+      setAuthToken(JSON.parse(localStorage.token));
+      axios.get('/api/auth').then((res) => dispatch(loadUser(res.data.user)));
+    }
+  }, [token, dispatch]);
 
   return (
     <>

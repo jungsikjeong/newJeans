@@ -20,7 +20,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { Button } from '../common/Button.styled';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../store';
 
 const Header = () => {
   const [isMenu, setIsMenu] = useState(false);
@@ -52,18 +53,20 @@ const Header = () => {
 
   const { user } = useSelector((state) => state.auth);
 
-  console.log('user', user);
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   // 메뉴 open,close
   const handleMenu = () => {
+    // className = isMenu ? 'true':'false';, 스르륵열리고 닫히는 css
     setIsMenu(!isMenu);
 
+    /** 메뉴가 열려있을때 */
     if (isOpen) {
       setTimeout(() => {
         setIsOpen(false);
-      }, 300);
+      }, 500);
     } else {
       setIsOpen(true);
     }
@@ -71,13 +74,16 @@ const Header = () => {
 
   const handlePageMove = (address) => {
     setIsOpen(false);
+    setIsMenu(false);
     navigate(address);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    dispatch(logout());
+    setIsOpen(false);
+    setIsMenu(false);
     navigate('/');
-    // axios.get('/api/auth/logout');
   };
 
   useEffect(() => {
@@ -126,6 +132,7 @@ const Header = () => {
           {user && user ? (
             <Img src={headerImg} alt='' onClick={() => handleMenu()} />
           ) : (
+            // <Img src={user.avatar} alt='' onClick={() => handleMenu()} />
             <span onClick={() => navigate('/login')}>Login</span>
           )}
         </div>
