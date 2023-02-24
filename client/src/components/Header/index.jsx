@@ -1,4 +1,5 @@
 import {
+  Img,
   Item,
   List,
   Login,
@@ -9,15 +10,49 @@ import {
   StyleHeader,
 } from './Header.styled';
 
+import img01 from '../../assets/images/민지header.png';
+import img02 from '../../assets/images/하니header.png';
+import img03 from '../../assets/images/다니엘header.png';
+import img04 from '../../assets/images/해린header.png';
+import img05 from '../../assets/images/혜인header.png';
+
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../common/Button.styled';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
   const [isMenu, setIsMenu] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [headerImg, setheaderImg] = useState('');
 
+  const [members, setMembers] = useState([
+    {
+      name: '민지',
+      src: img01,
+    },
+    {
+      name: '하니',
+      src: img02,
+    },
+    {
+      name: '다니엘',
+      src: img03,
+    },
+    {
+      name: '해린',
+      src: img04,
+    },
+    {
+      name: '혜인',
+      src: img05,
+    },
+  ]);
+
+  const { user } = useSelector((state) => state.auth);
+
+  console.log('user', user);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -33,6 +68,30 @@ const Header = () => {
       setIsOpen(true);
     }
   };
+
+  const handlePageMove = (address) => {
+    setIsOpen(false);
+    navigate(address);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+    // axios.get('/api/auth/logout');
+  };
+
+  useEffect(() => {
+    /**user.avatar에 따라서 이미지변환 */
+    if (user) {
+      members.map((member) => {
+        const index = user.avatar.indexOf(member.name);
+
+        if (index !== -1) {
+          setheaderImg(member.src);
+        }
+      });
+    }
+  }, [headerImg, members, user]);
 
   return (
     <StyleHeader
@@ -63,12 +122,14 @@ const Header = () => {
       </List>
 
       <Login>
-        <div className='user-wrap' onClick={() => navigate('/login')}>
-          Login
-          {/* onClick={() => handleMenu()} */}
-          {/* 로그인시,About으로 변경할 예정*/}
+        <div className='user-wrap'>
+          {user && user ? (
+            <Img src={headerImg} alt='' onClick={() => handleMenu()} />
+          ) : (
+            <span onClick={() => navigate('/login')}>Login</span>
+          )}
         </div>
-        <div>
+        <div className='icon-wrap'>
           <FiSearch
             className='search-icon'
             onClick={() => navigate('/search')}
@@ -76,18 +137,18 @@ const Header = () => {
         </div>
       </Login>
 
-      {isOpen && (
+      {user && isOpen && (
         <Menu className={isMenu ? 'open' : 'close'}>
           <MenuList className={isMenu ? 'show' : 'hide'}>
             <MenuItem>
-              <span className='name'>정중식, welcome! </span>
+              <span className='name'>{user.nickname}님, welcome! </span>
             </MenuItem>
 
             <MenuItem>
               <Button
                 backgroundColor='#00AE68'
                 shadowColor='#007503'
-                onClick={() => navigate('/writer')}
+                onClick={() => handlePageMove('/writer')}
               >
                 카드작성
               </Button>
@@ -95,13 +156,15 @@ const Header = () => {
             <MenuItem>
               <Button
                 backgroundColor='#FFAA40'
-                // onClick={() => navigate('/mypage')}
+                onClick={() => handlePageMove('/mypage')}
               >
                 마이페이지
               </Button>
             </MenuItem>
             <MenuItem>
-              <Button backgroundColor='tomato'>로그아웃</Button>
+              <Button backgroundColor='tomato' onClick={() => handleLogout()}>
+                로그아웃
+              </Button>
             </MenuItem>
           </MenuList>
         </Menu>

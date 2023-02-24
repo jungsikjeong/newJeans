@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
@@ -11,7 +11,9 @@ import Login from './components/Login';
 import Home from './components/Home';
 import Search from './components/Search/Search';
 
+import store, { loadUser } from './store';
 import setAuthToken from './utils/setAuthToken';
+import axios from 'axios';
 
 const theme = {
   colors: {
@@ -24,9 +26,15 @@ const theme = {
 };
 
 const App = () => {
-  if (localStorage.token) {
-    setAuthToken(localStorage.token);
-  }
+  // if (localStorage.token) {
+  //   setAuthToken(JSON.parse(localStorage.token));
+  // }
+  // useEffect(() => {
+  //   axios
+  //     .get('/api/auth')
+  //     .then((res) => store.dispatch(loadUser(res.data.user)));
+  // }, []);
+
   return (
     <>
       <ThemeProvider theme={theme}>

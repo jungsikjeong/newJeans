@@ -108,6 +108,14 @@ export const Item = styled.li`
   }
 `;
 
+export const Img = styled.img`
+  width: 60px;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: contain;
+  background: white;
+`;
+
 export const Login = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     font-size: 20px;
@@ -124,6 +132,11 @@ export const Login = styled.div`
     &:hover {
       transform: scale(1.2);
     }
+  }
+
+  .icon-wrap {
+    display: flex;
+    align-items: center;
   }
 
   .search-icon {
@@ -144,6 +157,7 @@ export const Menu = styled.div`
   width: 100%;
   z-index: 2;
   background: #f9f5f2;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 
   &.open {
     animation: ${menuOpenFrames} 0.3s linear forwards;

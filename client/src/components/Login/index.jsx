@@ -2,11 +2,16 @@ import * as S from '../common/Auth.styled';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
+import { loadUser } from '../../store';
+import { useDispatch } from 'react-redux';
 
 import Button from '../Button';
 import axios from 'axios';
+import setAuthToken from '../../utils/setAuthToken';
 
 const Login = () => {
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     userId: '',
     password: '',
@@ -55,8 +60,12 @@ const Login = () => {
     })
       .then((res) => {
         if (res.data?.token) {
-          localStorage.setItem('token', res.data.token);
-          navigator('/');
+          localStorage.setItem('token', JSON.stringify(res.data.token));
+          setAuthToken(JSON.parse(localStorage.token));
+
+          axios
+            .get('/api/auth')
+            .then((res) => dispatch(loadUser(res.data.user), navigator('/')));
         }
       })
       .catch((err) => {

@@ -7,10 +7,10 @@ const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 const User = require('../../models/User');
 
-// user by token
+/** user by token */
 router.get('/', async (req, res, next) =>
   passport.authenticate('jwt', { session: false }, async (err, user, info) => {
-    console.log(req.header('Authorization'));
+    // console.log(req.header('Authorization'));
     // passport.jwt token === undefined
     if (info) {
       return res
@@ -20,17 +20,18 @@ router.get('/', async (req, res, next) =>
 
     // token && user find
     if (user) {
-      const findUser = await User.findById({ _id: user._id });
+      const findUser = await User.findById({ _id: user._id })
+        .select('-password')
+        .exec();
 
       return res.json({
-        success: true,
         user: findUser,
       });
     }
   })(req, res, next)
 );
 
-// 회원가입
+/** register */
 router.post(
   '/register',
   passport.authenticate('signup', { session: false }),
@@ -42,7 +43,7 @@ router.post(
   }
 );
 
-// 로그인
+/** login */
 router.post('/login', async (req, res, next) => {
   passport.authenticate('login', async (err, user, info) => {
     try {
@@ -75,6 +76,11 @@ router.post('/login', async (req, res, next) => {
       return next(error);
     }
   })(req, res, next);
+});
+
+/** logout */
+router.get('/logout', (req, res) => {
+  console.log(req.header('Authorization'));
 });
 
 module.exports = router;
