@@ -22,6 +22,7 @@ router.get('/', async (req, res, next) =>
     if (user) {
       const findUser = await User.findById({ _id: user._id })
         .select('-password')
+        .select('-posts')
         .exec();
 
       return res.json({

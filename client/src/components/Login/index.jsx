@@ -67,7 +67,13 @@ const Login = () => {
 
           axios
             .get('/api/auth')
-            .then((res) => dispatch(loadUser(res.data.user), navigator('/')));
+            .then((res) =>
+              dispatch(
+                loadUser(res.data.user),
+                localStorage.setItem('userInfo', JSON.stringify(res.data.user)),
+                navigator('/')
+              )
+            );
         }
       })
       .catch((err) => {

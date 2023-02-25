@@ -20,7 +20,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FiSearch } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { Button } from '../common/Button.styled';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logout } from '../../store';
 
 const Header = () => {
@@ -51,7 +51,7 @@ const Header = () => {
     },
   ]);
 
-  const { user } = useSelector((state) => state.auth);
+  // const { user } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,7 +60,7 @@ const Header = () => {
   // 메뉴 open,close
   const handleMenu = () => {
     // className = isMenu ? 'true':'false';, 스르륵열리고 닫히는 css
-    setIsMenu(!isMenu);
+    setIsMenu(isMenu ? false : true);
 
     /** 메뉴가 열려있을때 */
     if (isOpen) {
@@ -80,14 +80,17 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
     dispatch(logout());
     setIsOpen(false);
     setIsMenu(false);
     navigate('/');
   };
 
+  const user = JSON.parse(localStorage.getItem('userInfo'));
+
   useEffect(() => {
-    /**user.avatar에 따라서 이미지변환 */
+    /** user.avatar에 따라서 이미지변환 */
     if (user) {
       members.map((member) => {
         const index = user.avatar.indexOf(member.name);
@@ -130,9 +133,12 @@ const Header = () => {
       <Login>
         <div className='user-wrap'>
           {user && user ? (
-            <Img src={headerImg} alt='' onClick={() => handleMenu()} />
+            <>
+              {headerImg && (
+                <Img src={headerImg} alt='' onClick={() => handleMenu()} />
+              )}
+            </>
           ) : (
-            // <Img src={user.avatar} alt='' onClick={() => handleMenu()} />
             <span onClick={() => navigate('/login')}>Login</span>
           )}
         </div>

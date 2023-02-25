@@ -32,6 +32,7 @@ const App = () => {
   const token = JSON.parse(localStorage.getItem('token'));
 
   useEffect(() => {
+    /**토큰으로 유저 정보를 user state에 담아줌 */
     if (token) {
       setAuthToken(JSON.parse(localStorage.token));
       axios.get('/api/auth').then((res) => dispatch(loadUser(res.data.user)));
