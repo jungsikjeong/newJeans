@@ -43,7 +43,7 @@ export const SideNav = styled.div`
 
     width: 50px;
     height: 50px;
-    background: #000;
+    background: red;
     margin-bottom: 10px;
   }
 `;
@@ -55,16 +55,17 @@ export const Main = styled.div`
     margin-top: 80px;
   }
 
-  width: 500px;
-  height: 500px;
   transition: all 0.3s;
+  /* background-color: ${(props) => (props.backgroundColor ? 'white' : '')}; */
 
   .drawing-paper {
     width: 100%;
     height: 100%;
-    background-image: url(https://img.hankyung.com/photo/202208/03.31024910.1.jpg);
+
+    /* background-image: url(https://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/10/08/b0bb64c1-989a-4ff6-abeb-fd92e81eda16.jpg);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    outline: none; */
   }
 `;
