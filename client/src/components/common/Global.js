@@ -4,6 +4,10 @@ import reset from 'styled-reset';
 const GlobalStyles = createGlobalStyle`
 ${reset}
 
+*{
+  box-sizing: border-box;
+}
+
 body{
   background: #f9f5f2;
 }
@@ -78,6 +82,21 @@ a{
     bottom: -25px;
   }
 }
+
+
+ .circle-shadow {
+    padding: 5px;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s;
+    cursor: pointer;
+    
+    :hover {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    }
+  }
+
+  
 
 @keyframes alert-fade-in {
 0%{

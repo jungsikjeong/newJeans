@@ -8,8 +8,6 @@ const router = express.Router();
 
 router.post('/', isLogin, upload.single('file'), async (req, res, p) => {
   try {
-    console.log('야');
-    console.log(req.file);
     res.json({
       success: true,
       fileInfo: req.file,

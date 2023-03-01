@@ -9,7 +9,7 @@ var storage = multer.diskStorage({
     file.originalname = Buffer.from(file.originalname, 'latin1').toString(
       'utf8'
     );
-    S;
+
     cb(null, Date.now().toString() + '-' + file.originalname);
   },
 });

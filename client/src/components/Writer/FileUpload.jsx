@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import { AiOutlineCamera } from 'react-icons/ai';
-import { useState } from 'react';
+import { BiImageAdd } from 'react-icons/bi';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { changeCanvasImage } from '../../store';
 
 const Container = styled.div`
   width: 100%;
@@ -9,12 +10,13 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 30px;
-  color: white;
 
   label {
+    font-size: 30px;
     transition: all 0.3s;
+    color: black;
     cursor: pointer;
+
     &:hover {
       transform: scale(1.2);
     }
@@ -22,7 +24,7 @@ const Container = styled.div`
 `;
 
 const FileUpload = () => {
-  //   const [file, setFile] = useState();
+  const dispatch = useDispatch();
 
   const handleFileUpload = async (e) => {
     const formData = new FormData();
@@ -35,7 +37,7 @@ const FileUpload = () => {
     await axios
       .post('/api/upload', formData, config)
       .then((response) => {
-        console.log(response);
+        dispatch(changeCanvasImage(response.data.fileInfo.filename));
       })
       .catch((err) => console.log(err));
   };
@@ -43,8 +45,9 @@ const FileUpload = () => {
   return (
     <Container>
       <label htmlFor='input-file'>
-        <AiOutlineCamera />
+        <BiImageAdd data-id='uploadImage' />
       </label>
+
       <input
         type='file'
         name='file'

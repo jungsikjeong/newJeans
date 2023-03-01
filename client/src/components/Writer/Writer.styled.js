@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   position: relative;
-  /* background: #000; */
+  /* overflow: hidden; */
 `;
 
 export const Wrapper = styled.div`
@@ -19,6 +19,7 @@ export const SideNav = styled.div`
     overflow-x: hidden;
     width: 100%;
     left: 0;
+    z-index: 100;
   }
 
   position: absolute;
@@ -31,8 +32,9 @@ export const SideNav = styled.div`
       width: 100%;
     }
 
+    padding: 20px 10px;
     background-color: white;
-    padding: 10px;
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
   }
 
   .side-item {
@@ -41,31 +43,44 @@ export const SideNav = styled.div`
       margin-bottom: 0px;
     }
 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 50px;
     height: 50px;
-    background: red;
     margin-bottom: 10px;
+    font-size: 30px;
+    transition: all 0.3s;
+    color: black;
+
+    cursor: pointer;
+
+    .icon {
+      transition: all 0.3s;
+      height: 100%;
+    }
+
+    .icon:hover {
+      transform: scale(1.2);
+    }
+
+    span {
+      text-align: center;
+      color: black;
+      font-size: 12px;
+    }
   }
 `;
 
 export const Main = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    width: 450px;
+    width: 350px;
     height: 450px;
-    margin-top: 80px;
+    margin-top: 100px;
   }
 
   transition: all 0.3s;
-  /* background-color: ${(props) => (props.backgroundColor ? 'white' : '')}; */
-
-  .drawing-paper {
-    width: 100%;
-    height: 100%;
-
-    /* background-image: url(https://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/10/08/b0bb64c1-989a-4ff6-abeb-fd92e81eda16.jpg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    outline: none; */
-  }
+  background-color: ${(props) => (props.backgroundColor ? 'white' : '')};
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
 `;
