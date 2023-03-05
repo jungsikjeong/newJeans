@@ -26,6 +26,7 @@ const Card = () => {
         <S.Col className='fade-col' ref={fadeCol[index]} key={index}>
           <img
             src='http://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/08/19/c5cd0937-06c6-4f4c-9f22-660c5ec8adfb.jpg'
+            // src={`uploads/1677937169296-blob`}
             alt=''
           />
           <S.InnerItem className='fade-item'>

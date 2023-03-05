@@ -105,19 +105,21 @@ const Header = () => {
   return (
     <StyleHeader
       disabled={
-        location.pathname === '/login' || location.pathname === '/register'
+        location.pathname === '/login' ||
+        location.pathname === '/register' ||
+        location.pathname === '/decoration'
       }
     >
-      <Logo onClick={() => navigate('/')}>
+      <Logo className='fade-item' onClick={() => navigate('/')}>
         <h1>NewJeans</h1>
       </Logo>
 
       <List>
-        <Item color='#FFBFBF'>
-          <span>하니</span>
-        </Item>
         <Item color='#f7e600'>
           <span>민지</span>
+        </Item>
+        <Item color='#FFBFBF'>
+          <span>하니</span>
         </Item>
         <Item color='#d8d2c6'>
           <span>해린</span>
@@ -157,6 +159,15 @@ const Header = () => {
               <span className='name'>{user.nickname}님, welcome! </span>
             </MenuItem>
 
+            <MenuItem>
+              <Button
+                backgroundColor='#00AE68'
+                shadowColor='#007503'
+                onClick={() => handlePageMove('/decoration')}
+              >
+                카드꾸미기
+              </Button>
+            </MenuItem>
             <MenuItem>
               <Button
                 backgroundColor='#00AE68'

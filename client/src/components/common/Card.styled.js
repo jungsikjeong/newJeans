@@ -40,6 +40,7 @@ export const InnerItem = styled.div`
   top: 0;
   bottom: 0px;
   background: rgba(0, 0, 0, 0.4);
+  overflow: hidden;
 
   div {
     text-align: center;
@@ -48,8 +49,12 @@ export const InnerItem = styled.div`
     h4 {
       font-size: 30px;
     }
+
     p {
-      margin-top: 20px;
+      width: 100%;
+      max-width: 350px;
+      margin: 0 auto;
+      margin-top: 100px;
       padding: 10px;
     }
     .inner-item-text {

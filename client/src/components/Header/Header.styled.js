@@ -46,21 +46,25 @@ export const Logo = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     font-size: 1.5rem;
   }
-
+  font-family: 'Rubik Iso', cursive;
   display: flex;
   align-items: center;
   height: 100%;
   font-size: 3rem;
-  font-weight: bold;
+  font-weight: 400;
   letter-spacing: -3px;
   cursor: pointer;
+
+  &:hover {
+    font-weight: bold;
+  }
 `;
 
 export const List = styled.ul`
   @media (max-width: ${({ theme }) => theme.tablet}) {
     padding: 0;
   }
-
+  font-family: 'Dongle', sans-serif;
   width: 100%;
   height: 100%;
   display: flex;
@@ -120,7 +124,7 @@ export const Login = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     font-size: 20px;
   }
-
+  font-family: 'Rubik Iso', cursive;
   display: flex;
   text-align: center;
   font-size: 25px;
@@ -131,6 +135,7 @@ export const Login = styled.div`
     transition: 0.3s;
     &:hover {
       transform: scale(1.2);
+      font-weight: bold;
     }
   }
 

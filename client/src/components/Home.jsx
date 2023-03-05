@@ -1,9 +1,9 @@
-import Card from '../components/Card';
+import CardList from './CardList';
 
 const Home = () => {
   return (
     <>
-      <Card />
+      <CardList />
     </>
   );
 };

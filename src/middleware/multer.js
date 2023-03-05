@@ -6,6 +6,7 @@ var storage = multer.diskStorage({
   },
 
   filename: function (req, file, cb) {
+    console.log(file);
     file.originalname = Buffer.from(file.originalname, 'latin1').toString(
       'utf8'
     );

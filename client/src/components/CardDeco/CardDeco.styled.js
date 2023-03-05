@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   position: relative;
-  /* overflow: hidden; */
+  overflow-x: hidden;
 `;
 
 export const Wrapper = styled.div`
@@ -30,6 +30,9 @@ export const SideNav = styled.div`
       display: flex;
       justify-content: center;
       width: 100%;
+
+      padding: 10px 0px;
+      /* padding-bottom: 10px; */
     }
 
     padding: 20px 10px;
@@ -41,6 +44,7 @@ export const SideNav = styled.div`
     @media (max-width: ${({ theme }) => theme.mobile}) {
       margin: 0 5px;
       margin-bottom: 0px;
+      font-size: 25px;
     }
 
     display: flex;
@@ -53,7 +57,6 @@ export const SideNav = styled.div`
     font-size: 30px;
     transition: all 0.3s;
     color: black;
-
     cursor: pointer;
 
     .icon {
@@ -66,6 +69,9 @@ export const SideNav = styled.div`
     }
 
     span {
+      @media (max-width: ${({ theme }) => theme.mobile}) {
+        /* font-size: 12px; */
+      }
       text-align: center;
       color: black;
       font-size: 12px;
@@ -77,7 +83,7 @@ export const Main = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 350px;
     height: 450px;
-    margin-top: 100px;
+    margin-top: ${(props) => (props.menuClick ? '280px' : '100px')};
   }
 
   transition: all 0.3s;

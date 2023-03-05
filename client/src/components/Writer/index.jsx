@@ -1,307 +1,313 @@
-import * as S from './Writer.styled';
-import {
-  Stage,
-  Layer,
-  Text,
-  Image as KonvaImage,
-  Transformer,
-} from 'react-konva';
-import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { GoTextSize } from 'react-icons/go';
-import useImage from 'use-image';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { changeCanvasImage } from '../../store';
+import { categoriesData } from '../../utils/categoriesData';
+import { date } from '../../utils/date';
+import FileUpload from '../CardDeco/SideMenu/FileUpload';
+import { Button } from '../common/Button.styled';
+import { CardFooter, InnerItem } from '../common/Card.styled';
 
-import FileUpload from './FileUpload';
-import TextTag from './SideMenu/TextTag';
+const Container = styled.div`
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
 
-let id = 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
 
-const URLImage = ({ url, width, fill }) => {
-  const [image] = useImage(url);
-  return <KonvaImage image={image} width={width} height={500} />;
-};
+const CreatedWrap = styled.div`
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  margin-top: 50px;
+`;
 
-const TextFiled = ({
-  shapeProps,
-  isSelected,
-  onSelect,
-  onChange,
-  x,
-  y,
-  fill,
-  fontSize,
-  text,
-  isDragging,
-  onDragStart,
-}) => {
-  const shapeRef = useRef();
-  const trRef = useRef();
+const Form = styled.form`
+  width: 100%;
+  max-width: 400px;
+`;
 
-  useEffect(() => {
-    if (isSelected) {
-      // transformer 수동연결
-      trRef.current?.nodes([shapeRef.current]);
-      trRef.current?.getLayer().batchDraw();
+const Title = styled.input`
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #eee;
+
+  &:focus {
+    outline: 1px solid rgb(6, 172, 255);
+  }
+
+  &:first-child {
+    margin-top: 0;
+  }
+`;
+
+const Body = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  margin-top: 22px;
+  height: 200px;
+  border: solid 2px #eee;
+  border-radius: 5px;
+  font-size: 16px;
+
+  &:focus {
+    outline: 1px solid rgb(6, 172, 255);
+  }
+`;
+
+const Category = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  .category-label {
+    font-size: 15px;
+    line-height: 2rem;
+    padding: 0.2em 0.4em;
+  }
+
+  .category-span {
+    vertical-align: middle;
+  }
+
+  .category-input {
+    vertical-align: middle;
+    appearance: none;
+    border: 2px solid #999;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+
+    &:focus-visible {
+      outline-offset: 0.1em;
+      outline: 0.1em dotted tomato;
     }
-  }, [isSelected]);
 
-  return (
-    <>
-      <Text
-        onClick={onSelect}
-        onTap={onSelect}
-        ref={shapeRef}
-        {...shapeProps}
-        draggable
-        x={x}
-        y={y}
-        fill={fill ? fill : 'black'}
-        fontSize={fontSize}
-        text={text}
-        scaleX={isDragging ? 1.2 : 1}
-        scaleY={isDragging ? 1.2 : 1}
-        onDragStart={(e) => onDragStart(e)}
-        onDragEnd={(e) => {
-          onChange({
-            ...shapeProps,
-            x: e.target.x(),
-            y: e.target.y(),
-            fill: e.target.fill(),
-            isDragging: false,
-          });
-        }}
-      />
+    &:checked {
+      outline: none;
+      border: 0.4em solid rgb(6, 172, 255);
+    }
 
-      {isSelected && (
-        <Transformer
-          ref={trRef}
-          boundBoxFunc={(oldBox, newBox) => {
-            // limit resize
-            if (newBox.width < 5 || newBox.height < 5) {
-              return oldBox;
-            }
-            return newBox;
-          }}
-        />
-      )}
-    </>
-  );
-};
+    &:hover {
+      box-shadow: 0 0 0 0.2em lightgray;
+      cursor: pointer;
+    }
+  }
+`;
 
-const Writer = () => {
-  const [toggle, setToggle] = useState({
-    text: true,
-  });
-  const [width, setWidth] = useState(500);
-  const [tag, setTag] = useState('');
+const BtnWrap = styled.div`
+  display: flex;
+`;
 
-  const [texts, setTexts] = useState([]);
-  const [selectedId, selectShape] = useState(null);
-  const [textColor, setTextColor] = useState('');
+const Message = styled.div`
+  color: tomato;
+  font-size: 12px;
+  margin-top: 9px;
+`;
 
-  const { text } = toggle;
+const Preview = styled.div`
+  position: relative;
+  color: white;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  margin-top: 50px;
+
+  img {
+    width: 100%;
+  }
+
+  &:hover .inner-item {
+    opacity: 0.1;
+  }
+`;
+
+const InnerItemStyle = styled(InnerItem)`
+  transition: all 0.3s;
+  display: block;
+`;
+
+const INITIALIZE = date();
+
+const Writer = ({ user }) => {
+  const dispatch = useDispatch();
+
+  const titleRef = useRef();
+  const bodyRef = useRef();
+
+  const [title, setTitle] = useState('');
+  const [textBody, setTextBody] = useState('');
+  const [isImage, setIsImage] = useState(false);
+  const [message, setMessage] = useState({ titleError: '', bodyError: '' });
+  const [date, setDate] = useState(INITIALIZE);
+
+  const { titleError, bodyError } = message;
+
+  const [submitBtnColor, setSubmitBtnColor] = useState('rgb(134,179,219)');
+
+  const [selectedCategory, setSelectedCategory] = useState('민지');
 
   const { canvasImage } = useSelector((state) => state.upload);
 
-  /** 사이드메뉴 클릭시 서브메뉴 on,off */
-  const handleToggle = (e) => {
-    setToggle({ ...toggle, [e.currentTarget.dataset.id]: !text });
+  const handleChangeTitle = (e) => {
+    if (titleRef.current.style.outlineColor === 'tomato') {
+      titleRef.current.style.outlineColor = 'rgb(6, 172, 255)';
+      setMessage({ ...message, titleError: '' });
+    }
+    setTitle(e.target.value);
   };
 
-  /** 텍스트 태그 선택 ex)H1, H2 select */
-  const handleSelectTag = (e) => {
-    const number = e.target.dataset.id;
-    let textTypes = {};
-
-    if (number === 'h1') {
-      textTypes = {
-        id: id.toString(),
-        tag: 'h1',
-        fontSize: '32',
-        text: '',
-        color: '',
-        isDragging: false,
-      };
+  const handleChangeBody = (e) => {
+    if (bodyRef.current.style.outlineColor === 'tomato') {
+      bodyRef.current.style.outlineColor = 'rgb(6, 172, 255)';
+      setMessage({ ...message, bodyError: '' });
     }
-    if (number === 'h2') {
-      textTypes = {
-        id: id.toString(),
-        tag: 'h2',
-        fontSize: '24',
-        text: '',
-        color: '',
-        isDragging: false,
-      };
-    }
-    if (number === 'h3') {
-      textTypes = {
-        id: id.toString(),
-        tag: 'h3',
-        fontSize: '19',
-        text: '',
-        color: '',
-        isDragging: false,
-      };
-    }
-    if (number === 'h4') {
-      textTypes = {
-        id: id.toString(),
-        tag: 'h4',
-        fontSize: '15',
-        text: '',
-        color: '',
-        isDragging: false,
-      };
-    }
-    if (number === 'h5') {
-      textTypes = {
-        id: id.toString(),
-        tag: 'h5',
-        fontSize: '13',
-        text: '',
-        color: '',
-        isDragging: false,
-      };
-    }
-    if (number === 'h6') {
-      textTypes = {
-        id: id.toString(),
-        tag: 'h6',
-        fontSize: '10',
-        text: '',
-        color: '',
-        isDragging: false,
-      };
-    }
-
-    id++;
-
-    const copyText = [...texts];
-    copyText.push(textTypes);
-
-    setTexts(copyText);
-
-    setTag(textTypes);
+    setTextBody(e.target.value);
   };
 
-  const handleTextColor = (e) => {
-    setTextColor(e.currentTarget.style.backgroundColor);
-
-    const index = texts.findIndex((text) => text.id === selectedId);
-    const copy = [...texts];
-
-    copy[index].color = textColor;
-    setTexts(copy);
+  const handleChangeCategory = (e) => {
+    setSelectedCategory(e.target.name);
   };
 
-  const handleDragStart = (e) => {
-    const id = e.currentTarget.index;
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    setTexts(
-      texts.map((text) => {
-        return {
-          ...text,
-          isDragging: text.id === id.toString(),
-        };
-      })
-    );
-  };
+    if (title.length === 0) {
+      titleRef.current.style.outlineColor = 'tomato';
+      titleRef.current?.focus();
+      setMessage({ titleError: '제목을 입력해주세요' });
+      return;
+    }
 
-  const handleCheckDeselect = (e) => {
-    // 빈영역을 클릭하면 체크 해제
-    const clickedOnEmpty = e.target === e.target.getStage();
-    if (clickedOnEmpty) {
-      selectShape(false);
+    if (title.length > 7) {
+      titleRef.current.style.outlineColor = 'tomato';
+      titleRef.current?.focus();
+      setMessage({ titleError: '제목이 너무 길어요 (7자이하)' });
+      return;
+    }
+
+    if (textBody.length === 0) {
+      bodyRef.current.style.outlineColor = 'tomato';
+      bodyRef.current?.focus();
+      setMessage({ bodyError: '내용을 입력해주세요' });
+      return;
+    }
+
+    if (textBody.length > 30) {
+      bodyRef.current.style.outlineColor = 'tomato';
+      bodyRef.current?.focus();
+      setMessage({ bodyError: '내용이 너무 길어요 (30자이하)' });
+      return;
+    }
+
+    if (canvasImage === '' || canvasImage === null) {
+      setIsImage(true);
+      return;
     }
   };
 
   useEffect(() => {
-    const resizeListener = () => {
-      if (window.innerWidth <= 513) {
-        setWidth(350);
-      } else {
-        setWidth(500);
-      }
-    };
+    if (!titleError && !bodyError && title && textBody) {
+      // Submit버튼 색상이 전송가능한 색상으로 변환
+      setSubmitBtnColor('rgb(68 131 239)');
+    } else {
+      setSubmitBtnColor('rgb(134,179,219)');
+    }
 
-    window.addEventListener('resize', resizeListener);
+    if (canvasImage !== null && canvasImage) {
+      setIsImage(false);
+    }
+  }, [bodyError, textBody, title, titleError, canvasImage]);
+
+  useEffect(() => {
     return () => {
-      window.removeEventListener('resize', resizeListener);
+      setTitle('');
+      setTextBody('');
+      setIsImage('');
+      setMessage({ titleError: '', bodyError: '' });
+      setSubmitBtnColor('rgb(134,179,219)');
+      setSelectedCategory('민지');
+      dispatch(changeCanvasImage(''));
     };
-  }, [width]);
+  }, []);
+
+  if (!user) {
+    return <Navigate to='/' />;
+  }
 
   return (
-    <S.Container>
-      <S.Wrapper>
-        <S.SideNav>
-          <ul className='side-list'>
-            <li className='side-item'>
-              <FileUpload />
-              <span>background</span>
-            </li>
-            <li className='side-item'>
-              <GoTextSize
-                className='icon'
-                data-id='text'
-                onClick={(e) => handleToggle(e)}
-              />
-              <span>Text</span>
-            </li>
-            <li className='side-item'></li>
-            <li className='side-item'></li>
-            <li className='side-item'></li>
-            <li className='side-item'></li>
-          </ul>
-        </S.SideNav>
+    <Container className='fade-item'>
+      <CreatedWrap>
+        <Form onSubmit={(e) => handleSubmit(e)}>
+          <Title
+            placeholder='Title'
+            ref={titleRef}
+            value={title}
+            onChange={(e) => handleChangeTitle(e)}
+          />
+          {titleError && <Message>{titleError}</Message>}
 
-        <TextTag
-          handleSelectTag={handleSelectTag}
-          handleTextColor={handleTextColor}
-          tag={tag}
-        />
+          <Body
+            value={textBody}
+            placeholder='Body'
+            ref={bodyRef}
+            onChange={(e) => handleChangeBody(e)}
+          />
 
-        <S.Main backgroundColor={canvasImage ? '' : 'white'}>
-          {/* Stage는 div wrapper이다 */}
-          <Stage
-            width={width}
-            height={500}
-            onMouseDown={handleCheckDeselect}
-            onTouchStart={handleCheckDeselect}
-          >
-            {/* /**Layer는 캔버스다 */}
-            <Layer>
-              {canvasImage && (
-                <URLImage url={`uploads/${canvasImage}`} width={width} />
-              )}
+          {bodyError && <Message>{bodyError}</Message>}
 
-              {texts &&
-                texts.map((text, i) => (
-                  <TextFiled
-                    key={i}
-                    shapeProps={text}
-                    isSelected={text.id === selectedId}
-                    onSelect={(e) => {
-                      selectShape(text.id);
-                    }}
-                    onChange={(newAttrs) => {
-                      const rects = texts.slice();
-                      rects[i] = newAttrs;
-                      setTexts(rects);
-                    }}
-                    isDragging={text.isDragging}
-                    onDragStart={handleDragStart}
-                    text={text.text ? text.text : '문구입력..'}
-                    x={150}
-                    y={250}
-                    fill={text.color ? text.color : 'black'}
-                    fontSize={parseInt(text.fontSize)}
-                  />
-                ))}
-            </Layer>
-          </Stage>
-        </S.Main>
-      </S.Wrapper>
-    </S.Container>
+          <Category>
+            {categoriesData.map((category, index) => (
+              <label className='category-label' key={index}>
+                <input
+                  type='radio'
+                  className='category-input'
+                  name={category.name}
+                  value={selectedCategory}
+                  checked={selectedCategory === category.name}
+                  onChange={(e) => handleChangeCategory(e)}
+                />
+                <span className='category-span'>{category.name}</span>
+              </label>
+            ))}
+          </Category>
+
+          <BtnWrap>
+            <FileUpload isImage={isImage} />
+            <Button
+              backgroundColor={submitBtnColor}
+              shadowColor={'none'}
+              style={{ marginRight: '5px' }}
+            >
+              작성하기
+            </Button>
+            <Button backgroundColor={'tomato'} shadowColor={'none'}>
+              취소하기
+            </Button>
+          </BtnWrap>
+        </Form>
+      </CreatedWrap>
+
+      {canvasImage && (
+        <Preview className='fade-item'>
+          <img src={canvasImage} alt='' />
+
+          <InnerItemStyle className='inner-item'>
+            <div>
+              <h4>{title}</h4>
+              <p>{textBody}</p>
+            </div>
+
+            <CardFooter>{date}</CardFooter>
+          </InnerItemStyle>
+        </Preview>
+      )}
+    </Container>
   );
 };
 
