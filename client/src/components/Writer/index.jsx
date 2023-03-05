@@ -225,6 +225,7 @@ const Writer = ({ user }) => {
   }, [bodyError, textBody, title, titleError, canvasImage]);
 
   useEffect(() => {
+    // TODO::: 글올리는서 성공시 초기화시켜주는걸로 변경하자
     return () => {
       setTitle('');
       setTextBody('');

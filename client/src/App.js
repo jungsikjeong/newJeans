@@ -15,7 +15,7 @@ import Search from './components/Search/Search';
 import { loadUser } from './store';
 import setAuthToken from './utils/setAuthToken';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const theme = {
   colors: {
@@ -30,20 +30,21 @@ const theme = {
 const App = () => {
   const [loading, setLoading] = useState(false);
 
+  const { user } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
 
   const token = JSON.parse(localStorage.getItem('token'));
-  const user = JSON.parse(localStorage.getItem('userInfo'));
 
   useEffect(() => {
     setLoading(true);
-    /**토큰으로 유저 정보를 user state에 담아줌 */
+    /**토큰으로 유저 정보를 user state에 담아줌*/
     if (token) {
       setAuthToken(JSON.parse(localStorage.token));
-      axios
-        .get('/api/auth')
-        .then((res) => dispatch(loadUser(res.data.user), setLoading(false)));
+      axios.get('/api/auth').then((res) => dispatch(loadUser(res.data.user)));
     }
+
+    setLoading(false);
   }, [token, dispatch]);
 
   return (
