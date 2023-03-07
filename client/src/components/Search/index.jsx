@@ -1,16 +1,20 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearPosts } from '../../store';
+import { fetchSearchItem } from '../../store/postsSlice';
 import { CardFooter, Col, InnerItem, Row } from '../common/Card.styled';
+import Loading from '../common/Loading';
 import * as S from './Search.styled';
 
 const Search = () => {
-  const [data, setData] = useState([]);
   const [text, setText] = useState('');
-  const [error, setError] = useState(false);
+
+  const dispatch = useDispatch();
+  const { posts, loading, error } = useSelector((state) => state.posts);
 
   const handleChange = (e) => {
     if (error) {
-      setError(false);
+      dispatch(clearPosts());
     }
     setText(e.target.value);
   };
@@ -18,17 +22,13 @@ const Search = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (text && text.length !== 0) {
-      axios
-        .post('/api/search', { text })
-        .then((res) => setData(res.data))
-        .catch((err) => setError(true), setData([]));
+      dispatch(fetchSearchItem(text));
     }
   };
 
   useEffect(() => {
     return () => {
-      setData([]);
-      setError(false);
+      dispatch(clearPosts());
     };
   }, []);
 
@@ -52,10 +52,12 @@ const Search = () => {
         )}
       </S.Wrapper>
 
+      {loading && <Loading />}
+
       <Row>
-        {data &&
-          !error &&
-          data.map((item, index) => (
+        {!loading &&
+          posts &&
+          posts.map((item, index) => (
             <Col className='fade-col' key={index}>
               <img src={`uploads/${item.image}`} alt='' />
               <InnerItem className='fade-item'>

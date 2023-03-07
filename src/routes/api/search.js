@@ -6,10 +6,9 @@ router.post('/', async (req, res) => {
   const { text } = req.body;
 
   if (text) {
-    const posts = await Post.find({ category: text }).sort({ _id: 1 }).exec();
-
+    const posts = await Post.find({ category: text }).sort({ _id: -1 }).exec();
     if (posts.length === 0 || !posts) {
-      return res.status(401).json({
+      return res.status(404).json({
         errors: { msg: 'No posts found' },
       });
     }
@@ -17,8 +16,14 @@ router.post('/', async (req, res) => {
     return res.status(200).json(posts);
   } else {
     const posts = await Post.find({ category: req.query.value })
-      .sort({ _id: 1 })
+      .sort({ _id: -1 })
       .exec();
+
+    if (posts.length === 0 || !posts) {
+      return res.status(404).json({
+        errors: { msg: 'No posts found' },
+      });
+    }
 
     return res.status(200).json(posts);
   }

@@ -5,7 +5,7 @@ import { uploadSlice } from './store/uploadSlice';
 
 export const { loadUser, logout } = authSlice.actions;
 export const { changeCanvasImage } = uploadSlice.actions;
-export const { getPosts } = postsSlice.actions;
+export const { getPosts, clearPosts } = postsSlice.actions;
 
 export default configureStore({
   reducer: {

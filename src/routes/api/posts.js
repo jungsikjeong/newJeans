@@ -31,7 +31,7 @@ router.get('/', async (req, res) => {
       })
       .limit(12);
     // .skip(6);
-
+    console.log(posts);
     res.json(posts);
   } catch (error) {
     console.error(error.message);
