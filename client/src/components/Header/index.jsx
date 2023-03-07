@@ -64,10 +64,14 @@ const Header = () => {
     /** 메뉴가 열려있을때 */
     if (isOpen) {
       setTimeout(() => {
-        setIsOpen(false);
-      }, 500);
+        // 닫힘
+        // setIsOpen((false));
+        setIsOpen((prev) => !prev);
+      }, 300);
     } else {
-      setIsOpen(true);
+      // 열림
+      setIsOpen((prev) => !prev);
+      // setIsOpen(true);
     }
   };
 

@@ -16,6 +16,7 @@ const Search = () => {
     if (error) {
       dispatch(clearPosts());
     }
+
     setText(e.target.value);
   };
 
