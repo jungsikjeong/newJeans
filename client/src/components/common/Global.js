@@ -34,23 +34,26 @@ a{
   animation: fade 400ms ease-out forwards;
 }
 
-
-
+.background-image{
+  width:200px;
+  height:100%;
+}
 
 
 .alert{
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    width:100px;
-    top:-480px;
-    right:150px;
-    font-size:10px;
+    width:200px;
+    top:-450px;
+    right:70px;
+    font-size:12px;
   }
   text-align:center;
-  width:130px;
+  width:196px;
   position: absolute;
   color: tomato;
-  font-size: 14px;
+  font-size: 12px;
   right: 280px;
+  right: 220px;
   top: -400px;
   z-index: 200;
   padding: 30px 25px;

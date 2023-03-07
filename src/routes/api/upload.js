@@ -6,7 +6,7 @@ const isLogin = require('../../middleware/isLogin');
 
 const router = express.Router();
 
-router.post('/', isLogin, upload.single('file'), async (req, res, p) => {
+router.post('/', isLogin, upload.single('file'), async (req, res) => {
   try {
     res.json({
       success: true,

@@ -7,7 +7,7 @@ const Button = ({ children, className, ...rest }) => {
       {...rest}
       className={className}
       color={rest.color}
-      background={rest.color}
+      background={rest.background}
     >
       {children}
     </S.Button>

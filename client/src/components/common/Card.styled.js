@@ -5,6 +5,7 @@ export const Row = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 1fr);
 
   @media (max-width: 1600px) {
     grid-template-columns: repeat(4, 1fr);
@@ -20,16 +21,19 @@ export const Row = styled.div`
 `;
 
 export const Col = styled.div`
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    min-height: 300px;
+  }
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: 440px;
 
   :hover {
+    color: white;
     .fade-item {
       display: block;
     }
-
-    color: white;
   }
 `;
 

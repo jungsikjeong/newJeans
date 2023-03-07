@@ -42,13 +42,18 @@ const Container = styled.div`
   }
 `;
 
-const FileUpload = ({ isImage }) => {
+const FileUpload = ({ isImage, setImage }) => {
   const dispatch = useDispatch();
 
   const location = useLocation();
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
+
+    // 카드 작성 페이지에서 writer.js에 파일을 넘겨주기위한 코드
+    if (setImage) {
+      setImage(file);
+    }
 
     const reader = new FileReader();
 
@@ -57,20 +62,6 @@ const FileUpload = ({ isImage }) => {
     reader.onload = function () {
       dispatch(changeCanvasImage(reader.result));
     };
-
-    // const formData = new FormData();
-    // formData.append('file', e.target.files[0]);
-
-    // const config = {
-    //   header: { 'content-type': 'multipart/form-data' },
-    // };
-
-    // await axios
-    //   .post('/api/upload', formData, config)
-    //   .then((response) => {
-    //     dispatch(changeCanvasImage(response.data.fileInfo.filename));
-    //   })
-    //   .catch((err) => console.log(err));
   };
 
   return (

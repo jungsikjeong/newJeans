@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '../common/Button.styled';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../store';
+import { fetchSearchItem } from '../../store/postsSlice';
 
 const Header = () => {
   const [isMenu, setIsMenu] = useState(false);
@@ -50,8 +51,6 @@ const Header = () => {
       src: img05,
     },
   ]);
-
-  // const { user } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -87,6 +86,11 @@ const Header = () => {
     navigate('/');
   };
 
+  const handleSearch = (e) => {
+    const text = e.target.textContent;
+    dispatch(fetchSearchItem(text));
+  };
+
   const user = JSON.parse(localStorage.getItem('userInfo'));
 
   useEffect(() => {
@@ -110,24 +114,24 @@ const Header = () => {
         location.pathname === '/decoration'
       }
     >
-      <Logo className='fade-item' onClick={() => navigate('/')}>
+      <Logo className='fade-item' onClick={() => window.location.replace('/')}>
         <h1>NewJeans</h1>
       </Logo>
 
       <List>
-        <Item color='#f7e600'>
+        <Item color='#f7e600' onClick={(e) => handleSearch(e)}>
           <span>민지</span>
         </Item>
-        <Item color='#FFBFBF'>
+        <Item color='#FFBFBF' onClick={(e) => handleSearch(e)}>
           <span>하니</span>
         </Item>
-        <Item color='#d8d2c6'>
+        <Item color='#d8d2c6' onClick={(e) => handleSearch(e)}>
           <span>해린</span>
         </Item>
-        <Item color='#D0FC5C'>
+        <Item color='#D0FC5C' onClick={(e) => handleSearch(e)}>
           <span>다니엘</span>
         </Item>
-        <Item color='#9EE0FF'>
+        <Item color='#9EE0FF' onClick={(e) => handleSearch(e)}>
           <span>혜인</span>
         </Item>
       </List>

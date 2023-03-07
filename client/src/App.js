@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
@@ -10,7 +10,7 @@ import CardDeco from './components/CardDeco';
 import Login from './components/Login';
 import Home from './components/Home';
 import Writer from './components/Writer';
-import Search from './components/Search/Search';
+import Search from './components/Search';
 
 import { loadUser } from './store';
 import setAuthToken from './utils/setAuthToken';
@@ -28,8 +28,6 @@ const theme = {
 };
 
 const App = () => {
-  const [loading, setLoading] = useState(false);
-
   const { user } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
@@ -37,14 +35,11 @@ const App = () => {
   const token = JSON.parse(localStorage.getItem('token'));
 
   useEffect(() => {
-    setLoading(true);
     /**토큰으로 유저 정보를 user state에 담아줌*/
     if (token) {
       setAuthToken(JSON.parse(localStorage.token));
       axios.get('/api/auth').then((res) => dispatch(loadUser(res.data.user)));
     }
-
-    setLoading(false);
   }, [token, dispatch]);
 
   return (

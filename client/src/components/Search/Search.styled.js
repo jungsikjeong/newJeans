@@ -26,5 +26,5 @@ export const Input = styled.input`
 export const NotSearch = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  padding: 40px 0px;
 `;

@@ -33,16 +33,41 @@ router.get('/', async (req, res, next) =>
 );
 
 /** register */
-router.post(
-  '/register',
-  passport.authenticate('signup', { session: false }),
-  async (req, res, next) => {
-    res.json({
-      message: '회원가입 완료',
-      user: req.user,
-    });
-  }
-);
+router.post('/register', async (req, res, next) => {
+  passport.authenticate('signup', async (err, user, info) => {
+    try {
+      if (err) {
+        const error = new Error('An error occurred.');
+
+        return next(error);
+      }
+
+      //  passport에서 인증 실패한 메시지가 나옴
+      if (info) {
+        return res.status(401).json(info);
+      }
+
+      req.login(user, { session: false }, async (error) => {
+        if (error) return next(error);
+
+        const body = { _id: user._id, userId: user.userId };
+        const token = jwt.sign({ user: body }, process.env.JWT_SECRET_KEY);
+
+        const newUser = {
+          userId: req.user.userId,
+          nickname: req.user.nickname,
+          avatar: req.user.avatar,
+          posts: req.user.posts,
+          _id: req.user._id,
+        };
+
+        return res.json({ token, newUser });
+      });
+    } catch (error) {
+      return next(error);
+    }
+  })(req, res, next);
+});
 
 /** login */
 router.post('/login', async (req, res, next) => {
@@ -50,7 +75,6 @@ router.post('/login', async (req, res, next) => {
     try {
       if (err) {
         const error = new Error('An error occurred.');
-
         return next(error);
       }
 

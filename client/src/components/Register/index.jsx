@@ -7,7 +7,9 @@ import img1 from '../../assets/images/민지.jpg';
 
 import Button from '../Button';
 import SliderCompo from '../Slider';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import setAuthToken from '../../utils/setAuthToken';
+import { loadUser } from '../../store';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -22,6 +24,7 @@ const Register = () => {
 
   const inputRef = useRef([]);
   const navigator = useNavigate();
+  const dispatch = useDispatch();
 
   const { isAuthenticated } = useSelector((state) => state.auth);
 
@@ -41,10 +44,13 @@ const Register = () => {
       inputRef.current[0].focus();
       return setMessage('유저 아이디를 입력해주세요');
     }
-
+    if (userId.length < 4) {
+      inputRef.current[0].focus();
+      return setMessage('아이디가 너무 짧아요!(최소4글자)');
+    }
     if (userId.length > 13) {
       inputRef.current[0].focus();
-      return setMessage('아이디가 너무 길어요!(max:12)');
+      return setMessage('아이디가 너무 길어요!(최대12글자)');
     }
     if (!nickname || nickname === '') {
       inputRef.current[1].focus();
@@ -74,8 +80,13 @@ const Register = () => {
       },
     })
       .then((res) => {
-        if (res.data?.success === true) {
-          navigator('/login');
+        if (res.data?.token) {
+          localStorage.setItem('token', JSON.stringify(res.data.token));
+          setAuthToken(JSON.parse(localStorage.token));
+
+          axios
+            .get('/api/auth')
+            .then((res) => dispatch(loadUser(res.data.user), navigator('/')));
         }
       })
       .catch((err) => {
@@ -154,6 +165,7 @@ const Register = () => {
           <Button
             className='register'
             color={styles.toString() === 'true' ? 'true' : ''}
+            background={styles.toString() === 'true' ? 'true' : ''}
           >
             가입하기
           </Button>

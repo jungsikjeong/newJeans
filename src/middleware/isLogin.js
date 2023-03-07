@@ -8,6 +8,8 @@ module.exports = function isLogin(req, res, next) {
         .status(401)
         .json([{ msg: 'JsonWebTokenError: invalid signature' }]);
     }
+
+    req.user = user._id;
     next();
   })(req, res, next);
 };

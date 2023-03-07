@@ -41,13 +41,13 @@ passport.use(
 
         if (user) {
           return done(null, false, {
-            errors: [{ msg: '사용자가 이미 존재합니다..' }],
+            errors: [{ msg: '아이디가 이미 존재합니다..' }],
           });
         }
 
         if (userNickname) {
           return done(null, false, {
-            errors: [{ msg: '사용자가 이미 존재합니다..' }],
+            errors: [{ msg: '닉네임이 이미 존재합니다..' }],
           });
         }
 
@@ -101,5 +101,4 @@ passport.use(
   )
 );
 
-// module.exports = { passport };
 module.exports = { passport };

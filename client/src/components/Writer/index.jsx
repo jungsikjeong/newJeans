@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import { changeCanvasImage } from '../../store';
 import { categoriesData } from '../../utils/categoriesData';
 import { date } from '../../utils/date';
-import FileUpload from '../CardDeco/SideMenu/FileUpload';
 import { Button } from '../common/Button.styled';
 import { CardFooter, InnerItem } from '../common/Card.styled';
+import FileUpload from '../CardDeco/SideMenu/FileUpload';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
@@ -137,11 +138,14 @@ const INITIALIZE = date();
 const Writer = ({ user }) => {
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const titleRef = useRef();
   const bodyRef = useRef();
 
   const [title, setTitle] = useState('');
   const [textBody, setTextBody] = useState('');
+  const [image, setImage] = useState('');
   const [isImage, setIsImage] = useState(false);
   const [message, setMessage] = useState({ titleError: '', bodyError: '' });
   const [date, setDate] = useState(INITIALIZE);
@@ -149,7 +153,6 @@ const Writer = ({ user }) => {
   const { titleError, bodyError } = message;
 
   const [submitBtnColor, setSubmitBtnColor] = useState('rgb(134,179,219)');
-
   const [selectedCategory, setSelectedCategory] = useState('민지');
 
   const { canvasImage } = useSelector((state) => state.upload);
@@ -174,7 +177,18 @@ const Writer = ({ user }) => {
     setSelectedCategory(e.target.name);
   };
 
-  const handleSubmit = (e) => {
+  const handleCancel = () => {
+    setTitle('');
+    setTextBody('');
+    setIsImage('');
+    setMessage({ titleError: '', bodyError: '' });
+    setSubmitBtnColor('rgb(134,179,219)');
+    setSelectedCategory('민지');
+    dispatch(changeCanvasImage(''));
+    navigate('/');
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (title.length === 0) {
@@ -205,10 +219,46 @@ const Writer = ({ user }) => {
       return;
     }
 
-    if (canvasImage === '' || canvasImage === null) {
+    if (
+      canvasImage === '' ||
+      canvasImage === null ||
+      image.length === 0 ||
+      !image
+    ) {
       setIsImage(true);
       return;
     }
+
+    const body = {
+      title,
+      textBody,
+      category: selectedCategory,
+    };
+
+    const formData = new FormData();
+    formData.append('file', image);
+    formData.append('data', JSON.stringify(body));
+
+    const config = {
+      header: { 'content-type': 'multipart/form-data' },
+    };
+
+    await axios
+      .post('/api/posts', formData, config)
+      .then((response) => {
+        if (response.data) {
+          setTitle('');
+          setTextBody('');
+          setIsImage('');
+          setMessage({ titleError: '', bodyError: '' });
+          setSubmitBtnColor('rgb(134,179,219)');
+          setSelectedCategory('민지');
+          dispatch(changeCanvasImage(''));
+
+          navigate('/');
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -224,91 +274,84 @@ const Writer = ({ user }) => {
     }
   }, [bodyError, textBody, title, titleError, canvasImage]);
 
-  useEffect(() => {
-    // TODO::: 글올리는서 성공시 초기화시켜주는걸로 변경하자
-    return () => {
-      setTitle('');
-      setTextBody('');
-      setIsImage('');
-      setMessage({ titleError: '', bodyError: '' });
-      setSubmitBtnColor('rgb(134,179,219)');
-      setSelectedCategory('민지');
-      dispatch(changeCanvasImage(''));
-    };
-  }, []);
-
-  if (!user) {
-    return <Navigate to='/' />;
-  }
-
   return (
-    <Container className='fade-item'>
-      <CreatedWrap>
-        <Form onSubmit={(e) => handleSubmit(e)}>
-          <Title
-            placeholder='Title'
-            ref={titleRef}
-            value={title}
-            onChange={(e) => handleChangeTitle(e)}
-          />
-          {titleError && <Message>{titleError}</Message>}
+    <>
+      {user && (
+        <Container className='fade-item'>
+          <CreatedWrap>
+            <Form onSubmit={(e) => handleSubmit(e)}>
+              <Title
+                placeholder='Title'
+                ref={titleRef}
+                value={title}
+                onChange={(e) => handleChangeTitle(e)}
+              />
+              {titleError && <Message>{titleError}</Message>}
 
-          <Body
-            value={textBody}
-            placeholder='Body'
-            ref={bodyRef}
-            onChange={(e) => handleChangeBody(e)}
-          />
+              <Body
+                value={textBody}
+                placeholder='Body'
+                ref={bodyRef}
+                onChange={(e) => handleChangeBody(e)}
+              />
 
-          {bodyError && <Message>{bodyError}</Message>}
+              {bodyError && <Message>{bodyError}</Message>}
 
-          <Category>
-            {categoriesData.map((category, index) => (
-              <label className='category-label' key={index}>
-                <input
-                  type='radio'
-                  className='category-input'
-                  name={category.name}
-                  value={selectedCategory}
-                  checked={selectedCategory === category.name}
-                  onChange={(e) => handleChangeCategory(e)}
-                />
-                <span className='category-span'>{category.name}</span>
-              </label>
-            ))}
-          </Category>
+              <Category>
+                {categoriesData.map((category, index) => (
+                  <label className='category-label' key={index}>
+                    <input
+                      type='radio'
+                      className='category-input'
+                      name={category.name}
+                      value={selectedCategory}
+                      checked={selectedCategory === category.name}
+                      onChange={(e) => handleChangeCategory(e)}
+                    />
+                    <span className='category-span'>{category.name}</span>
+                  </label>
+                ))}
+              </Category>
 
-          <BtnWrap>
-            <FileUpload isImage={isImage} />
-            <Button
-              backgroundColor={submitBtnColor}
-              shadowColor={'none'}
-              style={{ marginRight: '5px' }}
-            >
-              작성하기
-            </Button>
-            <Button backgroundColor={'tomato'} shadowColor={'none'}>
-              취소하기
-            </Button>
-          </BtnWrap>
-        </Form>
-      </CreatedWrap>
+              <BtnWrap>
+                <FileUpload isImage={isImage} setImage={setImage} />
+                <Button
+                  type='submit'
+                  backgroundColor={submitBtnColor}
+                  shadowColor={'none'}
+                  style={{ marginRight: '5px' }}
+                >
+                  작성하기
+                </Button>
+                <Button
+                  type='button'
+                  backgroundColor={'tomato'}
+                  shadowColor={'none'}
+                  onClick={() => handleCancel()}
+                >
+                  취소하기
+                </Button>
+              </BtnWrap>
+            </Form>
+          </CreatedWrap>
 
-      {canvasImage && (
-        <Preview className='fade-item'>
-          <img src={canvasImage} alt='' />
+          {canvasImage && (
+            <Preview className='fade-item'>
+              <img src={canvasImage} alt='' />
 
-          <InnerItemStyle className='inner-item'>
-            <div>
-              <h4>{title}</h4>
-              <p>{textBody}</p>
-            </div>
+              <InnerItemStyle className='inner-item'>
+                <div>
+                  <h4>{title}</h4>
+                  <p>{textBody}</p>
+                </div>
 
-            <CardFooter>{date}</CardFooter>
-          </InnerItemStyle>
-        </Preview>
+                <CardFooter>{date}</CardFooter>
+              </InnerItemStyle>
+            </Preview>
+          )}
+        </Container>
       )}
-    </Container>
+    </>
   );
 };
 

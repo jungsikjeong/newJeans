@@ -71,7 +71,6 @@ const Login = () => {
         }
       })
       .catch((err) => {
-        console.log(err.response.data.errors);
         setMessage(err.response.data.errors[0].msg);
       });
   };
@@ -131,6 +130,7 @@ const Login = () => {
           <Button
             className='register'
             color={styles.toString() === 'true' ? 'true' : ''}
+            background={styles.toString() === 'true' ? 'true' : ''}
           >
             로그인하기
           </Button>

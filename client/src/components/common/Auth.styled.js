@@ -61,6 +61,9 @@ export const FormGroup = styled.div`
 `;
 
 export const Input = styled.input`
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    font-size: 10.5px;
+  }
   width: 100%;
   height: 35px;
   padding: 5px 0;

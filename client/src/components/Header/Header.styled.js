@@ -74,9 +74,12 @@ export const List = styled.ul`
 `;
 
 export const Item = styled.li`
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    width: 1.5rem;
+  }
   display: flex;
   align-items: center;
-  margin-right: 10px;
+  width: 5rem;
   font-size: 25px;
   cursor: pointer;
 
@@ -113,6 +116,9 @@ export const Item = styled.li`
 `;
 
 export const Img = styled.img`
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    width: 100px;
+  }
   width: 60px;
   height: 100%;
   border-radius: 50%;

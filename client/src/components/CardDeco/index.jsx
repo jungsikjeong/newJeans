@@ -300,7 +300,7 @@ const CardDeco = ({ user }) => {
     e.preventDefault();
 
     if (window.confirm('카드 꾸미기를 완료하시겠습니까?')) {
-      const uri = stageRef.current.toDataURL({ pixelRatio: 1 });
+      const uri = stageRef.current.toDataURL({ pixelRatio: 2 });
       downloadURI(uri, 'card.png');
     }
     <Navigate to='/writer' />;
@@ -323,134 +323,134 @@ const CardDeco = ({ user }) => {
     };
   }, [width]);
 
-  if (!user) {
-    return <Navigate to='/' />;
-  }
-
   return (
-    <S.Container className='fade-item'>
-      <S.Wrapper>
-        <S.SideNav>
-          <ul className='side-list'>
-            <li className='side-item'>
-              <FileUpload />
-              <span>background</span>
-            </li>
-            <li className='side-item'>
-              <GoTextSize
-                className='icon'
-                data-id='textMenu'
-                onClick={(e) => handleToggle(e)}
-              />
-              <span>Text</span>
-            </li>
-            <li className='side-item'>
-              <MdOutlineEmojiEmotions
-                className='icon'
-                data-id='sicker'
-                onClick={(e) => handleToggle(e)}
-              />
-              <span>sicker</span>
-            </li>
-            <li className='side-item'>
-              <BiUpload className='icon' onClick={(e) => handleSubmit(e)} />
-              <span>Save</span>
-            </li>
-            <li className='side-item'>
-              <FiHome className='icon' onClick={() => navigator('/')} />
-              <span>Home</span>
-            </li>
-          </ul>
-        </S.SideNav>
-
-        {textMenu && (
-          <TextCollection
-            handleSelectText={handleSelectText}
-            handleTextColor={handleTextColor}
-            handleCloseBtn={handleCloseBtn}
-            tag={tag}
-          />
-        )}
-        {sicker && (
-          <StickerCollection
-            handleCloseBtn={handleCloseBtn}
-            handleSelectSticker={handleSelectSticker}
-          />
-        )}
-
-        <S.Main
-          backgroundColor={canvasImage ? '' : 'white'}
-          menuClick={
-            toggle.textMenu === true || toggle.sicker === true ? 'true' : ''
-          }
-        >
-          {/* Stage는 div wrapper이다 */}
-          <Stage
-            ref={stageRef}
-            width={width}
-            height={500}
-            onMouseDown={handleCheckDeselect}
-            onTouchStart={handleCheckDeselect}
-          >
-            {/* /**Layer는 캔버스다 */}
-            <Layer>
-              {canvasImage && (
-                <CanvasBackgroundImage
-                  url={canvasImage}
-                  width={width}
-                  onMouseDown={handleCheckDeselect}
-                  onTouchStart={handleCheckDeselect}
-                />
-              )}
-
-              {texts &&
-                texts.map((text, i) => (
-                  <TextFiled
-                    key={i}
-                    shapeProps={text}
-                    isSelected={text.id === selectedId}
-                    onSelect={(e) => {
-                      selectShape(text.id);
-                    }}
-                    onChange={(newAttrs) => {
-                      const rects = texts.slice();
-                      rects[i] = newAttrs;
-                      setTexts(rects);
-                    }}
-                    isDragging={text.isDragging}
-                    onDragStart={handleTextDragStart}
-                    text={text.text && text.text}
-                    x={150}
-                    y={250}
-                    fill={text.color ? text.color : 'black'}
-                    fontSize={32}
+    <>
+      {user && (
+        <S.Container className='fade-item'>
+          <S.Wrapper>
+            <S.SideNav>
+              <ul className='side-list'>
+                <li className='side-item'>
+                  <FileUpload />
+                  <span>background</span>
+                </li>
+                <li className='side-item'>
+                  <GoTextSize
+                    className='icon'
+                    data-id='textMenu'
+                    onClick={(e) => handleToggle(e)}
                   />
-                ))}
-
-              {stickers &&
-                stickers.map((sticker, i) => (
-                  <StickerImage
-                    key={i}
-                    url={sticker.url}
-                    shapeProps={sticker}
-                    isSelected={sticker.id === selectedId}
-                    onSelect={(e) => {
-                      selectShape(sticker.id);
-                    }}
-                    isDragging={sticker.isDragging}
-                    onChange={(newAttrs) => {
-                      const rects = stickers.slice();
-                      rects[i] = newAttrs;
-                      setStickers(rects);
-                    }}
-                    onDragStart={handleStickerDragStart}
+                  <span>Text</span>
+                </li>
+                <li className='side-item'>
+                  <MdOutlineEmojiEmotions
+                    className='icon'
+                    data-id='sicker'
+                    onClick={(e) => handleToggle(e)}
                   />
-                ))}
-            </Layer>
-          </Stage>
-        </S.Main>
-      </S.Wrapper>
-    </S.Container>
+                  <span>sicker</span>
+                </li>
+                <li className='side-item'>
+                  <BiUpload className='icon' onClick={(e) => handleSubmit(e)} />
+                  <span>Save</span>
+                </li>
+                <li className='side-item'>
+                  <FiHome className='icon' onClick={() => navigator('/')} />
+                  <span>Home</span>
+                </li>
+              </ul>
+            </S.SideNav>
+
+            {textMenu && (
+              <TextCollection
+                handleSelectText={handleSelectText}
+                handleTextColor={handleTextColor}
+                handleCloseBtn={handleCloseBtn}
+                tag={tag}
+              />
+            )}
+            {sicker && (
+              <StickerCollection
+                handleCloseBtn={handleCloseBtn}
+                handleSelectSticker={handleSelectSticker}
+              />
+            )}
+
+            <S.Main
+              backgroundColor={canvasImage ? '' : 'white'}
+              menuClick={
+                toggle.textMenu === true || toggle.sicker === true ? 'true' : ''
+              }
+            >
+              {/* Stage는 div wrapper이다 */}
+              <Stage
+                ref={stageRef}
+                width={width}
+                height={500}
+                onMouseDown={handleCheckDeselect}
+                onTouchStart={handleCheckDeselect}
+              >
+                {/* Layer는 캔버스다 */}
+                <Layer>
+                  {canvasImage && (
+                    <CanvasBackgroundImage
+                      url={canvasImage}
+                      width={width}
+                      onMouseDown={handleCheckDeselect}
+                      onTouchStart={handleCheckDeselect}
+                    />
+                  )}
+
+                  {texts &&
+                    texts.map((text, i) => (
+                      <TextFiled
+                        key={i}
+                        shapeProps={text}
+                        isSelected={text.id === selectedId}
+                        onSelect={(e) => {
+                          selectShape(text.id);
+                        }}
+                        onChange={(newAttrs) => {
+                          const rects = texts.slice();
+                          rects[i] = newAttrs;
+                          setTexts(rects);
+                        }}
+                        isDragging={text.isDragging}
+                        onDragStart={handleTextDragStart}
+                        text={text.text && text.text}
+                        x={150}
+                        y={250}
+                        fill={text.color ? text.color : 'black'}
+                        fontSize={32}
+                      />
+                    ))}
+
+                  {stickers &&
+                    stickers.map((sticker, i) => (
+                      <StickerImage
+                        key={i}
+                        url={sticker.url}
+                        shapeProps={sticker}
+                        isSelected={sticker.id === selectedId}
+                        onSelect={(e) => {
+                          selectShape(sticker.id);
+                        }}
+                        isDragging={sticker.isDragging}
+                        onChange={(newAttrs) => {
+                          const rects = stickers.slice();
+                          rects[i] = newAttrs;
+                          setStickers(rects);
+                        }}
+                        onDragStart={handleStickerDragStart}
+                      />
+                    ))}
+                </Layer>
+              </Stage>
+            </S.Main>
+          </S.Wrapper>
+        </S.Container>
+      )}
+    </>
   );
 };
 

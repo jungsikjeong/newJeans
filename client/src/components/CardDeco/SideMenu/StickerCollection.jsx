@@ -8,6 +8,7 @@ import sticker3 from '../../../assets/images/sticker3.png';
 import sticker4 from '../../../assets/images/sticker4.png';
 import sticker5 from '../../../assets/images/sticker5.png';
 import sticker6 from '../../../assets/images/sticker6.png';
+import sticker7 from '../../../assets/images/sticker7.png';
 
 import Layout from './Layout';
 
@@ -75,6 +76,7 @@ const StickerCollection = ({ handleCloseBtn, handleSelectSticker }) => {
     { src: sticker4 },
     { src: sticker5 },
     { src: sticker6 },
+    { src: sticker7 },
   ]);
 
   return (
