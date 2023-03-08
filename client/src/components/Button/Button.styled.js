@@ -11,11 +11,22 @@ export const Button = styled.button`
   padding-right: 1rem;
   line-height: 30px;
   transition: 0.3s;
+  background: ${(props) => (props.background ? props.background : '#f0f0f0')};
   cursor: pointer;
 
   &.register {
     margin-top: 15px;
     color: ${(props) => (props.color ? 'white' : '#666')};
     background: ${(props) => (props.background ? 'tomato' : '#F0F0F0')};
+  }
+
+  &.edit {
+    margin-top: 15px;
+    color: #666;
+    background: #f0f0f0;
+    &:hover {
+      color: white;
+      background: #808080;
+    }
   }
 `;

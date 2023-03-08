@@ -43,8 +43,8 @@ a{
 .alert{
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width:200px;
-    top:-450px;
-    right:70px;
+    top:-350px;
+    right:90px;
     font-size:12px;
   }
   text-align:center;
@@ -52,9 +52,8 @@ a{
   position: absolute;
   color: tomato;
   font-size: 12px;
-  right: 280px;
-  right: 220px;
-  top: -400px;
+  right: 200px;
+  top: -350px;
   z-index: 200;
   padding: 30px 25px;
   background: #fff;
@@ -66,7 +65,7 @@ a{
   transition:.4s .6s linear;
   &:after, &:before{
     @media (max-width: ${({ theme }) => theme.mobile}) {
-      left:80px;
+      left:90px;
       bottom:-30px;
     }
     content: '';
@@ -74,7 +73,7 @@ a{
     width: 25px;
     height: 25px;
     background: #fff;
-    left: 170px;
+    left: 180px;
     bottom: -8px;
     box-shadow:0 2px 5px rgba(0,0,0,.2);
     border-radius:50%;
@@ -89,6 +88,8 @@ a{
     bottom: -25px;
   }
 }
+
+
 
 
  .circle-shadow {

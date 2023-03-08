@@ -24,13 +24,6 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-
-  posts: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'post',
-    },
-  ],
 });
 
 UserSchema.pre('save', async function (next) {
@@ -43,8 +36,9 @@ UserSchema.pre('save', async function (next) {
 
 UserSchema.methods.isValidPassword = async function (password) {
   const user = this;
-  const compare = await bcrypt.compare(password, user.password);
+  console.log(password);
 
+  const compare = await bcrypt.compare(password, user.password);
   return compare;
 };
 

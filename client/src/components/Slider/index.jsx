@@ -7,6 +7,7 @@ import img2 from '../../assets/images/하니.jpg';
 import img3 from '../../assets/images/해린.jpg';
 import img4 from '../../assets/images/다니엘.jpg';
 import img5 from '../../assets/images/혜인.jpg';
+import { useEffect, useState } from 'react';
 
 const data = [
   {
@@ -15,36 +16,51 @@ const data = [
     src: img1,
   },
   {
-    id: 0,
+    id: 1,
     name: '하니',
     src: img2,
   },
   {
-    id: 0,
+    id: 2,
     name: '해린',
     src: img3,
   },
   {
-    id: 0,
+    id: 3,
     name: '다니엘',
     src: img4,
   },
   {
-    id: 0,
+    id: 4,
     name: '혜인',
     src: img5,
   },
 ];
 
-const SliderCompo = ({ handleAvatarChange }) => {
+const SliderCompo = ({ handleAvatarChange, avatar }) => {
+  const [initialSlideNumber, setInitialSlideNumber] = useState();
+
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    initialSlide: initialSlideNumber,
     afterChange: (current) => handleAvatarChange(data[current]),
   };
+
+  useEffect(() => {
+    // Edit페이지에서 해당 유저의 아바타가 먼저 슬라이드에 보이게해줌
+    if (avatar) {
+      const avatarName = avatar.substr(14, 2);
+
+      const { id } = data.find((item) => item.name === avatarName);
+      setInitialSlideNumber(id);
+    } else {
+      setInitialSlideNumber(0);
+    }
+  }, []);
 
   return (
     <S.Container>

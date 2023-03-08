@@ -36,6 +36,7 @@ export const IconWrap = styled.div`
 `;
 
 export const Form = styled.form`
+  position: relative;
   width: 100%;
   max-width: 250px;
   display: flex;

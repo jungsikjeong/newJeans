@@ -29,7 +29,10 @@ const Register = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value.replace(/\s/g, ''),
+    });
     setMessage('');
   };
 
@@ -159,9 +162,8 @@ const Register = () => {
               onChange={(e) => handleChange(e)}
               ref={(el) => (inputRef.current[2] = el)}
             />
-
-            {message && <p className='alert'>{message}</p>}
           </S.FormGroup>
+          {message && <p className='alert'>{message}</p>}
           <Button
             className='register'
             color={styles.toString() === 'true' ? 'true' : ''}

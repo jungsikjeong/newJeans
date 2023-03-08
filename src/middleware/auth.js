@@ -100,5 +100,46 @@ passport.use(
     }
   )
 );
+passport.use(
+  'userEdit',
+  new localStrategy(
+    {
+      usernameField: 'userId',
+      passwordField: 'password',
+      passReqToCallback: true,
+    },
+    async (req, userId, password, done) => {
+      try {
+        const { nickname, avatar } = req.body;
+        console.log('ㅇㅇㅇ');
+        let user = await User.findOne({ userId });
+        const userNickname = await User.findOne({ nickname });
+
+        if (!user) {
+          return done(null, false, {
+            errors: [{ msg: '유저를 찾을 수 없습니다.' }],
+          });
+        }
+
+        if (userNickname) {
+          return done(null, false, {
+            errors: [{ msg: '닉네임이 이미 존재합니다..' }],
+          });
+        }
+
+        user.nickname = nickname;
+        user.avatar = avatar;
+        user.password = password;
+
+        await user.save();
+
+        return done(null, user);
+      } catch (error) {
+        console.log(error);
+        return done(error);
+      }
+    }
+  )
+);
 
 module.exports = { passport };

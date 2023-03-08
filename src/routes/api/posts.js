@@ -31,7 +31,19 @@ router.get('/', async (req, res) => {
       })
       .limit(12);
     // .skip(6);
-    console.log(posts);
+
+    res.json(posts);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+/** 마이페이지에서 내가 쓴글 불러오기 */
+router.get('/mypage', isLogin, async (req, res) => {
+  try {
+    const posts = await Post.find({ user: req.user }).sort({ date: -1 });
+
     res.json(posts);
   } catch (error) {
     console.error(error.message);
@@ -45,17 +57,14 @@ router.post('/', isLogin, upload.single('file'), async (req, res) => {
   const { title, textBody, category } = JSON.parse(obj.data);
 
   try {
-    const user = await User.findById(req.user);
     const newPost = new Post({
       title: title,
       body: textBody,
       category: category,
       image: req.file.filename ? req.file.filename : '',
+      user: req.user,
       date: fullDate,
     });
-
-    user.posts.push(newPost);
-    await user.save();
 
     const post = await newPost.save();
 

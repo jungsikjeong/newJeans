@@ -6,7 +6,7 @@ export const fetchSearchItem = createAsyncThunk(
   async (text, { rejectWithValue }) => {
     try {
       const { data } = await axios.post(`/api/search?value=${text}`);
-
+      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.errors);
@@ -20,6 +20,19 @@ export const fetchGetPosts = createAsyncThunk(
     const { data } = await axios.get('/api/posts');
 
     return data;
+  }
+);
+
+export const fetchMyPageGetPosts = createAsyncThunk(
+  'posts/fetchMyPageGetPosts',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get('/api/posts/mypage');
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.errors);
+    }
   }
 );
 
@@ -54,6 +67,7 @@ export const postsSlice = createSlice({
       .addCase(fetchGetPosts.rejected, (state, action) => {
         state.loading = false;
       })
+
       .addCase(fetchSearchItem.pending, (state, action) => {
         state.loading = true;
         state.posts = [];
@@ -64,6 +78,21 @@ export const postsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchSearchItem.rejected, (state, action) => {
+        state.loading = false;
+        state.posts = [];
+        state.error = action.payload;
+      })
+
+      .addCase(fetchMyPageGetPosts.pending, (state, action) => {
+        state.loading = true;
+        state.posts = [];
+      })
+      .addCase(fetchMyPageGetPosts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.posts = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchMyPageGetPosts.rejected, (state, action) => {
         state.loading = false;
         state.posts = [];
         state.error = action.payload;

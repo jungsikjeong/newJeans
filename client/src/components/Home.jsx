@@ -1,7 +1,5 @@
-import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPosts } from '../store';
 import { fetchGetPosts } from '../store/postsSlice';
 import CardList from './CardList';
 import Loading from './common/Loading';
@@ -12,7 +10,6 @@ const Home = () => {
   const { posts, loading } = useSelector((state) => state.posts);
 
   useEffect(() => {
-    // axios.get('/api/posts').then((res) => dispatch(getPosts(res.data)));
     dispatch(fetchGetPosts());
   }, [dispatch]);
 
