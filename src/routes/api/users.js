@@ -3,6 +3,7 @@ const passport = require('passport');
 const router = express.Router();
 
 const isLogin = require('../../middleware/isLogin');
+const bcrypt = require('bcrypt');
 
 const User = require('../../models/User');
 
@@ -42,14 +43,15 @@ router.post('/edit/profile', isLogin, async (req, res) => {
 
     // 패스워드만 바꾸면,
     if (passwordMode && !nicknameMode) {
-      console.log(password);
+      const hash = await bcrypt.hash(password, 10);
+
       newUser = await User.findByIdAndUpdate(
         user,
         {
           $set: {
             nickname: nickname ? nickname : user.nickname,
             avatar: avatar ? avatar : user.avatar,
-            password: password ? password : user.password,
+            password: hash,
           },
         },
         { new: true }
@@ -57,12 +59,13 @@ router.post('/edit/profile', isLogin, async (req, res) => {
         .select('-password')
         .exec();
 
-      await user.save();
       return res.json(newUser);
     }
 
     // 닉네임, 패스워드 둘다 바꾸게된다면,
     if (passwordMode && nicknameMode) {
+      const hash = await bcrypt.hash(password, 10);
+
       const exist = await User.find({ nickname: nickname });
 
       if (exist && exist.length !== 0) {
@@ -77,7 +80,7 @@ router.post('/edit/profile', isLogin, async (req, res) => {
           $set: {
             nickname: nickname ? nickname : user.nickname,
             avatar: avatar ? avatar : user.avatar,
-            password: password,
+            password: hash,
           },
         },
         { new: true }
@@ -85,7 +88,6 @@ router.post('/edit/profile', isLogin, async (req, res) => {
         .select('-password')
         .exec();
 
-      await user.save();
       return res.json(newUser);
     }
 
