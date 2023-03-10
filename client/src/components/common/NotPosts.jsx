@@ -5,6 +5,7 @@ const Container = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
+  bottom: 0;
   transform: translate(-50%, -50%);
 `;
 

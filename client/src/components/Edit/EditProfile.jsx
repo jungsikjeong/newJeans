@@ -6,7 +6,6 @@ import { GrClose } from 'react-icons/gr';
 import SliderCompo from '../Slider';
 import Button from '../Button';
 import axios from 'axios';
-import setAuthToken from '../../utils/setAuthToken';
 import { loadUser } from '../../store';
 
 const Container = styled.div`
@@ -15,15 +14,16 @@ const Container = styled.div`
   }
   position: fixed;
   top: 40px;
+  top: 0px;
   left: 0;
   bottom: 0;
   width: 100%;
-  background: transparent;
+  background-color: rgba(0, 0, 0, 0.5);
   overflow: hidden;
   z-index: 10;
 `;
 
-const Edit = ({ user, handleEditModeChange }) => {
+const EditProfile = ({ user, handleEditModeChange }) => {
   const inputRef = useRef([]);
   const dispatch = useDispatch();
 
@@ -193,4 +193,4 @@ const Edit = ({ user, handleEditModeChange }) => {
   );
 };
 
-export default Edit;
+export default EditProfile;

@@ -16,6 +16,7 @@ import { loadUser } from './store';
 import setAuthToken from './utils/setAuthToken';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import EditPostPage from './components/Edit/EditPostPage';
 
 const theme = {
   colors: {
@@ -55,6 +56,7 @@ const App = () => {
           <Route path='/decoration' element={<CardDeco user={user} />} />
           <Route path='/writer' element={<Writer user={user} />} />
           <Route path='/mypage' element={<MyPage />} />
+          <Route path='/edit/post/:id' element={<EditPostPage user={user} />} />
         </Routes>
       </ThemeProvider>
     </>

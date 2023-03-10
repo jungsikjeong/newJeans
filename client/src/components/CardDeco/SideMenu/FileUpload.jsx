@@ -42,7 +42,7 @@ const Container = styled.div`
   }
 `;
 
-const FileUpload = ({ isImage, setImage }) => {
+const FileUpload = ({ isImage, setImage, locationPostEdit }) => {
   const dispatch = useDispatch();
 
   const location = useLocation();
@@ -50,22 +50,27 @@ const FileUpload = ({ isImage, setImage }) => {
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
 
-    // 카드 작성 페이지에서 writer.js에 파일을 넘겨주기위한 코드
+    // 카드 작성 페이지에서 writer.js에 이미지를 넘겨주기위한 코드
     if (setImage) {
       setImage(file);
     }
 
     const reader = new FileReader();
 
-    reader.readAsDataURL(file);
+    if (file && file.type.match('image.*')) {
+      reader.readAsDataURL(file);
 
-    reader.onload = function () {
-      dispatch(changeCanvasImage(reader.result));
-    };
+      reader.onload = function () {
+        dispatch(changeCanvasImage(reader.result));
+      };
+    }
   };
 
   return (
-    <Container isImage={isImage} writerPage={location.pathname === '/writer'}>
+    <Container
+      isImage={isImage}
+      writerPage={location.pathname === '/writer' || locationPostEdit}
+    >
       <label htmlFor='input-file'>
         <BiImageAdd data-id='uploadImage' />
       </label>

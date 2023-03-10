@@ -67,7 +67,7 @@ export const List = styled.ul`
   font-family: 'Dongle', sans-serif;
   width: 100%;
   height: 100%;
-  display: flex;
+  display: ${(props) => (props.disabled ? 'none' : 'flex')};
   justify-content: center;
   align-items: center;
   padding-right: 50px;
@@ -117,7 +117,7 @@ export const Item = styled.li`
 
 export const Img = styled.img`
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    width: 100px;
+    width: ${(props) => (props.mypage ? '45px' : '100px')};
   }
   width: 60px;
   height: 100%;

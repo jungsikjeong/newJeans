@@ -14,12 +14,27 @@ export const fetchSearchItem = createAsyncThunk(
   }
 );
 
+// 전체 게시글 가져오기
 export const fetchGetPosts = createAsyncThunk(
   'posts/fetchByPosts',
   async () => {
     const { data } = await axios.get('/api/posts');
 
     return data;
+  }
+);
+
+// 특정 게시물 가져오기
+export const fetchGetPost = createAsyncThunk(
+  'posts/fetchByPost',
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`/api/posts/${id}`);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.errors);
+    }
   }
 );
 
@@ -41,6 +56,7 @@ export const postsSlice = createSlice({
   initialState: {
     loading: false,
     posts: [],
+    post: [],
     error: null,
   },
   reducers: {
@@ -49,6 +65,7 @@ export const postsSlice = createSlice({
     },
 
     clearPosts(state, action) {
+      state.post = [];
       state.posts = [];
       state.error = null;
     },
@@ -95,6 +112,21 @@ export const postsSlice = createSlice({
       .addCase(fetchMyPageGetPosts.rejected, (state, action) => {
         state.loading = false;
         state.posts = [];
+        state.error = action.payload;
+      })
+
+      .addCase(fetchGetPost.pending, (state, action) => {
+        state.loading = true;
+        state.post = [];
+      })
+      .addCase(fetchGetPost.fulfilled, (state, action) => {
+        state.loading = false;
+        state.post = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchGetPost.rejected, (state, action) => {
+        state.loading = false;
+        state.post = [];
         state.error = action.payload;
       });
   },

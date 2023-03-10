@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearPosts } from '../../store';
 import { fetchMyPageGetPosts } from '../../store/postsSlice';
 import { CardFooter, Col, InnerItem, Row } from '../common/Card.styled';
-import Edit from '../Edit/index';
+import EditProfile from '../Edit/EditProfile';
 import Button from '../Button';
 import Loading from '../common/Loading';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
-  position: relative;
+  /* position: relative; */
 `;
 
 const Wrapper = styled.div`
@@ -32,14 +33,18 @@ const ImageWrap = styled.div`
 
 const MyPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.auth);
   const { posts, loading } = useSelector((state) => state.posts);
-
   const [editMode, setEditMode] = useState(false);
 
   const handleEditModeChange = () => {
     setEditMode(!editMode);
+  };
+
+  const handleEditPostPage = (postId) => {
+    navigate(`/edit/post/${postId}`);
   };
 
   useEffect(() => {
@@ -57,7 +62,7 @@ const MyPage = () => {
       {loading && <Loading />}
 
       {user && editMode && (
-        <Edit user={user} handleEditModeChange={handleEditModeChange} />
+        <EditProfile user={user} handleEditModeChange={handleEditModeChange} />
       )}
 
       {user && !loading && (
@@ -72,11 +77,12 @@ const MyPage = () => {
           </Wrapper>
           <Row>
             {posts &&
-              posts.map((post, index) => (
+              posts.map((post) => (
                 <Col
                   className='fade-item'
-                  key={index}
+                  key={post._id}
                   style={{ cursor: 'pointer' }}
+                  onClick={() => handleEditPostPage(post._id)}
                 >
                   <img src={`uploads/${post.image}`} alt='' />
 

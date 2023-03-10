@@ -122,7 +122,7 @@ const Header = () => {
         <h1>NewJeans</h1>
       </Logo>
 
-      <List>
+      <List disabled={location.pathname === '/mypage'}>
         <Item color='#f7e600' onClick={(e) => handleSearch(e)}>
           <span>민지</span>
         </Item>
@@ -145,7 +145,12 @@ const Header = () => {
           {user && user ? (
             <>
               {headerImg && (
-                <Img src={headerImg} alt='' onClick={() => handleMenu()} />
+                <Img
+                  src={headerImg}
+                  alt=''
+                  onClick={() => handleMenu()}
+                  mypage={location.pathname === '/mypage'}
+                />
               )}
             </>
           ) : (
@@ -169,8 +174,8 @@ const Header = () => {
 
             <MenuItem>
               <Button
-                backgroundColor='#00AE68'
-                shadowColor='#007503'
+                backgroundColor='#ec6d71'
+                shadowColor='#f7c8ca'
                 onClick={() => handlePageMove('/decoration')}
               >
                 카드꾸미기

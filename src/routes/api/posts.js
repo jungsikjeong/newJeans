@@ -51,6 +51,50 @@ router.get('/mypage', isLogin, async (req, res) => {
   }
 });
 
+/** 특정 게시글 불러오기 */
+router.get('/:id', async (req, res) => {
+  try {
+    const posts = await Post.findById(req.params.id);
+
+    res.json(posts);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+/** 특정 게시글 수정하기 */
+router.put('/:id', isLogin, upload.single('file'), async (req, res) => {
+  const obj = JSON.parse(JSON.stringify(req.body));
+  const { title, textBody, category } = obj;
+
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (post) {
+      const newPost = await Post.findByIdAndUpdate(
+        post,
+        {
+          $set: {
+            title: title ? title : post.title,
+            body: textBody ? textBody : post.body,
+            category: category ? category : post.category,
+            image: req.file?.filename ? req.file.filename : post.image,
+            user: req.user,
+            date: fullDate,
+          },
+        },
+        { new: true }
+      ).exec();
+
+      return res.json(newPost);
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 /** 게시글 작성 */
 router.post('/', isLogin, upload.single('file'), async (req, res) => {
   const obj = JSON.parse(JSON.stringify(req.body));

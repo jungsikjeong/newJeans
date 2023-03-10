@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeCanvasImage } from '../../store';
+import { changeCanvasImage, clearPosts } from '../../store';
 import { categoriesData } from '../../utils/categoriesData';
-import { date } from '../../utils/date';
 import { Button } from '../common/Button.styled';
 import { CardFooter, InnerItem } from '../common/Card.styled';
 import FileUpload from '../CardDeco/SideMenu/FileUpload';
+import { useNavigate, useParams } from 'react-router-dom';
+import { fetchGetPost } from '../../store/postsSlice';
+import Loading from '../common/Loading';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
@@ -124,6 +125,7 @@ const Preview = styled.div`
 
   img {
     width: 100%;
+    height: 100%;
   }
 
   &:hover .inner-item {
@@ -136,27 +138,27 @@ const InnerItemStyle = styled(InnerItem)`
   display: block;
 `;
 
-const INITIALIZE = date();
-
-const Writer = ({ user }) => {
+const EditPostPage = ({ user }) => {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const titleRef = useRef();
   const bodyRef = useRef();
+
+  const { post, loading } = useSelector((state) => state.posts);
 
   const [title, setTitle] = useState('');
   const [textBody, setTextBody] = useState('');
   const [image, setImage] = useState('');
   const [isImage, setIsImage] = useState(false);
   const [message, setMessage] = useState({ titleError: '', bodyError: '' });
-  const [date, setDate] = useState(INITIALIZE);
+  const [date, setDate] = useState('');
 
   const { titleError, bodyError } = message;
 
   const [submitBtnColor, setSubmitBtnColor] = useState('rgb(134,179,219)');
-  const [selectedCategory, setSelectedCategory] = useState('민지');
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const { canvasImage } = useSelector((state) => state.upload);
 
@@ -188,7 +190,7 @@ const Writer = ({ user }) => {
     setSubmitBtnColor('rgb(134,179,219)');
     setSelectedCategory('민지');
     dispatch(changeCanvasImage(''));
-    navigate('/');
+    navigate(-1);
   };
 
   const handleSubmit = async (e) => {
@@ -222,16 +224,6 @@ const Writer = ({ user }) => {
       return;
     }
 
-    if (
-      canvasImage === '' ||
-      canvasImage === null ||
-      image.length === 0 ||
-      !image
-    ) {
-      setIsImage(true);
-      return;
-    }
-
     const body = {
       title,
       textBody,
@@ -247,22 +239,27 @@ const Writer = ({ user }) => {
     };
 
     await axios
-      .post('/api/posts', formData, config)
+      .put(`/api/posts/${id}`, image ? formData : body, config)
       .then((response) => {
-        if (response.data) {
-          setTitle('');
-          setTextBody('');
-          setIsImage('');
-          setMessage({ titleError: '', bodyError: '' });
-          setSubmitBtnColor('rgb(134,179,219)');
-          setSelectedCategory('민지');
-          dispatch(changeCanvasImage(''));
+        console.log(response.data);
+        // if (response.data) {
+        //   setTitle('');
+        //   setTextBody('');
+        //   setIsImage('');
+        //   setMessage({ titleError: '', bodyError: '' });
+        //   setSubmitBtnColor('rgb(134,179,219)');
+        //   setSelectedCategory('민지');
+        //   dispatch(changeCanvasImage(''));
 
-          navigate('/');
-        }
+        //   navigate('/');
+        // }
       })
       .catch((err) => console.log(err));
   };
+
+  useEffect(() => {
+    dispatch(fetchGetPost(id));
+  }, []);
 
   useEffect(() => {
     if (!titleError && !bodyError && title && textBody) {
@@ -277,22 +274,33 @@ const Writer = ({ user }) => {
     }
   }, [bodyError, textBody, title, titleError, canvasImage]);
 
+  useEffect(() => {
+    if (post) {
+      setTitle(post.title);
+      setTextBody(post.body);
+      setSelectedCategory(post.category);
+      setDate(post.date);
+      dispatch(changeCanvasImage(`/uploads/${post.image}`));
+    }
+  }, [post, dispatch]);
   return (
     <>
-      {user && (
+      {loading && <Loading />}
+
+      {!loading && user && post && (
         <Container className='fade-item'>
           <CreatedWrap>
             <Form onSubmit={(e) => handleSubmit(e)}>
               <Title
                 placeholder='Title'
                 ref={titleRef}
-                value={title}
+                value={title || ''}
                 onChange={(e) => handleChangeTitle(e)}
               />
               {titleError && <Message>{titleError}</Message>}
 
               <Body
-                value={textBody}
+                value={textBody || ''}
                 placeholder='Body'
                 ref={bodyRef}
                 onChange={(e) => handleChangeBody(e)}
@@ -317,7 +325,11 @@ const Writer = ({ user }) => {
               </Category>
 
               <BtnWrap>
-                <FileUpload isImage={isImage} setImage={setImage} />
+                <FileUpload
+                  isImage={isImage}
+                  setImage={setImage}
+                  locationPostEdit='true'
+                />
                 <Button
                   type='submit'
                   backgroundColor={submitBtnColor}
@@ -338,24 +350,22 @@ const Writer = ({ user }) => {
             </Form>
           </CreatedWrap>
 
-          {canvasImage && (
-            <Preview className='fade-item'>
-              <img src={canvasImage} alt='' />
+          <Preview className='fade-item'>
+            <img src={canvasImage ? canvasImage : ''} alt='' />
 
-              <InnerItemStyle className='inner-item'>
-                <div>
-                  <h4>{title}</h4>
-                  <p>{textBody}</p>
-                </div>
+            <InnerItemStyle className='inner-item'>
+              <div>
+                <h4>{title ? title : post.title}</h4>
+                <p>{textBody ? textBody : post.body}</p>
+              </div>
 
-                <CardFooter>{date}</CardFooter>
-              </InnerItemStyle>
-            </Preview>
-          )}
+              <CardFooter>{date && date.substr(0, 6)}</CardFooter>
+            </InnerItemStyle>
+          </Preview>
         </Container>
       )}
     </>
   );
 };
 
-export default Writer;
+export default EditPostPage;
