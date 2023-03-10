@@ -241,18 +241,10 @@ const EditPostPage = ({ user }) => {
     await axios
       .put(`/api/posts/${id}`, image ? formData : body, config)
       .then((response) => {
-        console.log(response.data);
-        // if (response.data) {
-        //   setTitle('');
-        //   setTextBody('');
-        //   setIsImage('');
-        //   setMessage({ titleError: '', bodyError: '' });
-        //   setSubmitBtnColor('rgb(134,179,219)');
-        //   setSelectedCategory('민지');
-        //   dispatch(changeCanvasImage(''));
-
-        //   navigate('/');
-        // }
+        if (response.data) {
+          setMessage({ titleError: '', bodyError: '' });
+          navigate(-1);
+        }
       })
       .catch((err) => console.log(err));
   };

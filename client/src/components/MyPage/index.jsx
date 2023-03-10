@@ -71,6 +71,9 @@ const MyPage = () => {
             <ImageWrap>
               <img src={user.avatar} alt='' />
             </ImageWrap>
+
+            <div style={{ margin: '0px 0px 10px 0px' }}>{user.nickname}</div>
+
             <Button background='tomato' onClick={() => handleEditModeChange()}>
               편집하기
             </Button>
@@ -91,7 +94,7 @@ const MyPage = () => {
                       <h4>{post.title}</h4>
                       <p>{post.body}</p>
                     </div>
-                    <CardFooter>{post.date.substr(0, 6)}</CardFooter>
+                    <CardFooter>{post.date.substr(0, 7)}</CardFooter>
                   </InnerItem>
                 </Col>
               ))}

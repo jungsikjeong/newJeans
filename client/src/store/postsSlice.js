@@ -6,7 +6,6 @@ export const fetchSearchItem = createAsyncThunk(
   async (text, { rejectWithValue }) => {
     try {
       const { data } = await axios.post(`/api/search?value=${text}`);
-      console.log(data);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.errors);

@@ -7,20 +7,23 @@ const upload = require('../../middleware/multer');
 const Post = require('../../models/Post');
 const User = require('../../models/User');
 
-let now = new Date();
-let yearNum = now.getFullYear();
-let month = now.getMonth() + 1;
-let date = now.getDate();
-let hours = now.getHours();
-let minutes = now.getMinutes();
-let seconds = now.getSeconds();
+function dataFun() {
+  let now = new Date();
+  let yearNum = now.getFullYear();
+  let month = now.getMonth() + 1;
+  let date = now.getDate();
+  let hours = now.getHours();
+  let minutes = now.getMinutes();
+  let seconds = now.getSeconds();
 
-let year = yearNum.toString();
-let newYear = parseInt(year.substr(2, 3));
-let fullDate = '';
+  let year = yearNum.toString();
+  let newYear = parseInt(year.substr(2, 3));
+  let fullDate = '';
 
-// fullDate += newYear + '.' + month + '.' + date;
-fullDate = `${newYear}.${month}.${date}.${hours}${minutes}${seconds}`;
+  fullDate = `${newYear}.${month}.${date}${hours}${minutes}${seconds}`;
+
+  return fullDate;
+}
 
 /** 모든 게시글 불러오기 */
 router.get('/', async (req, res) => {
@@ -68,6 +71,8 @@ router.put('/:id', isLogin, upload.single('file'), async (req, res) => {
   const obj = JSON.parse(JSON.stringify(req.body));
   const { title, textBody, category } = obj;
 
+  const currentDate = dataFun();
+
   try {
     const post = await Post.findById(req.params.id);
 
@@ -81,7 +86,7 @@ router.put('/:id', isLogin, upload.single('file'), async (req, res) => {
             category: category ? category : post.category,
             image: req.file?.filename ? req.file.filename : post.image,
             user: req.user,
-            date: fullDate,
+            date: currentDate,
           },
         },
         { new: true }
@@ -100,6 +105,8 @@ router.post('/', isLogin, upload.single('file'), async (req, res) => {
   const obj = JSON.parse(JSON.stringify(req.body));
   const { title, textBody, category } = JSON.parse(obj.data);
 
+  const currentDate = dataFun();
+  console.log(obj);
   try {
     const newPost = new Post({
       title: title,
@@ -107,7 +114,7 @@ router.post('/', isLogin, upload.single('file'), async (req, res) => {
       category: category,
       image: req.file.filename ? req.file.filename : '',
       user: req.user,
-      date: fullDate,
+      date: currentDate,
     });
 
     const post = await newPost.save();

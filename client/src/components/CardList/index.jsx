@@ -24,7 +24,7 @@ const Card = ({ data }) => {
                 <h4>{item.title}</h4>
                 <p>{item.body}</p>
               </div>
-              <S.CardFooter>{item.date.substr(0, 6)}</S.CardFooter>
+              <S.CardFooter>{item.date.substr(0, 7)}</S.CardFooter>
             </S.InnerItem>
           </S.Col>
         ))}

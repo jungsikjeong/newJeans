@@ -8,10 +8,14 @@ const User = require('../../models/User');
 
 // 유저 정보 변경
 router.post('/edit/profile', isLogin, async (req, res) => {
-  const { nickname, password, avatar } = req.body;
+  const { nickname, password, avatar, nicknameMode, passwordMode } = req.body;
+
   try {
-    if (!password || password.length === 0) {
-      const user = await User.findById(req.user);
+    let newUser;
+    const user = await User.findById(req.user);
+
+    // 닉네임만 바꾸면,
+    if (nicknameMode && !passwordMode) {
       const exist = await User.find({ nickname: nickname });
 
       if (exist && exist.length !== 0) {
@@ -20,7 +24,7 @@ router.post('/edit/profile', isLogin, async (req, res) => {
         });
       }
 
-      const newUser = await User.findByIdAndUpdate(
+      newUser = await User.findByIdAndUpdate(
         user,
         {
           $set: {
@@ -34,8 +38,31 @@ router.post('/edit/profile', isLogin, async (req, res) => {
         .exec();
 
       return res.json(newUser);
-    } else {
-      const user = await User.findById(req.user);
+    }
+
+    // 패스워드만 바꾸면,
+    if (passwordMode && !nicknameMode) {
+      console.log(password);
+      newUser = await User.findByIdAndUpdate(
+        user,
+        {
+          $set: {
+            nickname: nickname ? nickname : user.nickname,
+            avatar: avatar ? avatar : user.avatar,
+            password: password ? password : user.password,
+          },
+        },
+        { new: true }
+      )
+        .select('-password')
+        .exec();
+
+      await user.save();
+      return res.json(newUser);
+    }
+
+    // 닉네임, 패스워드 둘다 바꾸게된다면,
+    if (passwordMode && nicknameMode) {
       const exist = await User.find({ nickname: nickname });
 
       if (exist && exist.length !== 0) {
@@ -44,7 +71,7 @@ router.post('/edit/profile', isLogin, async (req, res) => {
         });
       }
 
-      const newUser = await User.findByIdAndUpdate(
+      newUser = await User.findByIdAndUpdate(
         user,
         {
           $set: {
@@ -59,9 +86,23 @@ router.post('/edit/profile', isLogin, async (req, res) => {
         .exec();
 
       await user.save();
-
       return res.json(newUser);
     }
+
+    // 아바타만 변경하게된다면,
+    newUser = await User.findByIdAndUpdate(
+      user,
+      {
+        $set: {
+          avatar: avatar ? avatar : user.avatar,
+        },
+      },
+      { new: true }
+    )
+      .select('-password')
+      .exec();
+
+    return res.json(newUser);
   } catch (error) {
     console.error(error.message);
 

@@ -31,7 +31,9 @@ const EditProfile = ({ user, handleEditModeChange }) => {
     nickname: user.nickname,
     password: '',
   });
+  const [nicknameMode, setNicknameMode] = useState(false);
   const [passwordMode, setPasswordMode] = useState(false);
+  const [avatarMode, setAvatarMode] = useState(false);
 
   const [message, setMessage] = useState('');
   const [styles, setStyles] = useState(false);
@@ -50,81 +52,87 @@ const EditProfile = ({ user, handleEditModeChange }) => {
 
   const handleAvatarChange = (data) => {
     setAvatar(data.src);
+    setAvatarMode(true);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (nickname.length === 0) {
-      inputRef.current[1].focus();
-      return setMessage('닉네임을 입력해주세요');
-    }
-    if (nickname.length === '') {
-      inputRef.current[1].focus();
-      return setMessage('닉네임을 입력해주세요');
-    }
-    if (nickname.length === 1 || nickname.length >= 7) {
-      inputRef.current[1].focus();
-      return setMessage('닉네임은 2~6글자로 해주세요');
-    }
-
-    if (passwordMode) {
-      if (password.length < 6) {
-        inputRef.current[2].focus();
-        return setMessage('비밀번호는 6글자이상 입력해주세요');
-      }
-      if (password.length > 6) {
-        inputRef.current[2].focus();
-        return setMessage('비밀번호는 6글자까지만 입력해주세요');
-      }
-    }
-
-    axios({
-      method: 'post',
-      url: '/api/users/edit/profile',
-      data: {
-        nickname,
-        password,
-        avatar,
-      },
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          axios
-            .get('/api/auth')
-            .then((res) =>
-              dispatch(
-                loadUser(res.data.user),
-                handleEditModeChange(),
-                alert('정보가 변경되었습니다.')
-              )
-            );
+    if (nicknameMode || passwordMode || avatarMode) {
+      if (nicknameMode) {
+        if (nickname.length === 0) {
+          inputRef.current[1].focus();
+          return setMessage('닉네임을 입력해주세요');
         }
+        if (nickname.length === '') {
+          inputRef.current[1].focus();
+          return setMessage('닉네임을 입력해주세요');
+        }
+        if (nickname.length === 1 || nickname.length >= 7) {
+          inputRef.current[1].focus();
+          return setMessage('닉네임은 2~6글자로 해주세요');
+        }
+      }
+
+      if (passwordMode) {
+        if (password.length < 6) {
+          inputRef.current[2].focus();
+          return setMessage('비밀번호는 6글자이상 입력해주세요');
+        }
+        if (password.length > 6) {
+          inputRef.current[2].focus();
+          return setMessage('비밀번호는 6글자까지만 입력해주세요');
+        }
+      }
+
+      axios({
+        method: 'post',
+        url: '/api/users/edit/profile',
+        data: {
+          nickname: nicknameMode ? nickname : '',
+          password: passwordMode ? password : '',
+          avatar,
+          nicknameMode,
+          passwordMode,
+        },
       })
-      .catch((err) => {
-        setMessage(err.response.data.errors.msg);
-      });
+        .then((res) => {
+          if (res.status === 200) {
+            axios
+              .get('/api/auth')
+              .then((res) =>
+                dispatch(
+                  loadUser(res.data.user),
+                  handleEditModeChange(),
+                  alert('정보가 변경되었습니다.')
+                )
+              );
+          }
+        })
+        .catch((err) => {
+          if (err.response.data.errors) {
+            setMessage(err.response.data.errors.msg);
+          }
+        });
+    }
   };
 
   useEffect(() => {
-    if (passwordMode) {
-      if (nickname && password) {
-        setStyles(true);
-      }
-
-      if (nickname === '' || password === '') {
-        setStyles(false);
-      }
-    } else {
-      if (nickname) {
-        setStyles(true);
-      }
-
-      if (nickname === '') {
-        setStyles(false);
-      }
+    if (nicknameMode) {
+      nickname && setStyles(true);
+      nickname === '' && setStyles(false);
     }
-  }, [passwordMode, nickname, password]);
+
+    if (passwordMode) {
+      nickname && password && setStyles(true);
+
+      nickname === '' || (password === '' && setStyles(false));
+    }
+
+    if (avatarMode) {
+      setStyles(true);
+    }
+  }, [avatarMode, nicknameMode, passwordMode, nickname, password]);
 
   return (
     <Container>
@@ -136,19 +144,32 @@ const EditProfile = ({ user, handleEditModeChange }) => {
         <SliderCompo handleAvatarChange={handleAvatarChange} avatar={avatar} />
 
         <S.Form onSubmit={(e) => handleSubmit(e)}>
-          <S.FormGroup>
-            <S.Label htmlFor='user-nickname' userId={formData.nickname}>
-              Nickname
-            </S.Label>
-            <S.Input
-              type='text'
-              id='user-nickname'
-              name='nickname'
-              value={formData.nickname}
-              onChange={(e) => handleChange(e)}
-              ref={(el) => (inputRef.current[1] = el)}
-            />
-          </S.FormGroup>
+          {nicknameMode && (
+            <S.FormGroup>
+              <S.Label htmlFor='user-nickname' userId={formData.nickname}>
+                Nickname
+              </S.Label>
+              <S.Input
+                type='text'
+                id='user-nickname'
+                name='nickname'
+                value={formData.nickname}
+                onChange={(e) => handleChange(e)}
+                ref={(el) => (inputRef.current[1] = el)}
+              />
+            </S.FormGroup>
+          )}
+
+          {!nicknameMode && (
+            <Button
+              className='edit'
+              type='button'
+              onClick={(e) => setNicknameMode(!nicknameMode)}
+            >
+              닉네임변경
+            </Button>
+          )}
+
           {!passwordMode && (
             <Button
               className='edit'
