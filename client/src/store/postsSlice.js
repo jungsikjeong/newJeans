@@ -16,8 +16,8 @@ export const fetchSearchItem = createAsyncThunk(
 // 전체 게시글 가져오기
 export const fetchGetPosts = createAsyncThunk(
   'posts/fetchByPosts',
-  async () => {
-    const { data } = await axios.get('/api/posts');
+  async (params) => {
+    const { data } = await axios.get('/api/posts', { params });
 
     return data;
   }
@@ -79,6 +79,7 @@ export const postsSlice = createSlice({
       .addCase(fetchGetPosts.fulfilled, (state, action) => {
         state.loading = false;
         state.posts = action.payload;
+        state.error = null;
       })
       .addCase(fetchGetPosts.rejected, (state, action) => {
         state.loading = false;

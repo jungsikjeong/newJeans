@@ -14,6 +14,10 @@ export const Button = styled.button`
   background: ${(props) => (props.background ? props.background : '#f0f0f0')};
   cursor: pointer;
 
+  &:hover {
+    opacity: 0.8;
+  }
+
   &.register {
     margin-top: 15px;
     color: ${(props) => (props.color ? 'white' : '#666')};

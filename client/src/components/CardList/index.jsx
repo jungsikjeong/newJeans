@@ -1,7 +1,15 @@
 import { createRef, useEffect } from 'react';
+import styled from 'styled-components';
+import Button from '../Button';
 import * as S from '../common/Card.styled';
 
-const Card = ({ data }) => {
+const BtnWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+`;
+
+const Card = ({ data, handlePageChange }) => {
   const fadeCol = Array.from({ length: data.length }).map(() => createRef());
 
   useEffect(() => {
@@ -14,21 +22,28 @@ const Card = ({ data }) => {
   }, [data.length, fadeCol]);
 
   return (
-    <S.Row>
-      {data &&
-        data.map((item, index) => (
-          <S.Col className='fade-col' ref={fadeCol[index]} key={index}>
-            <img src={`uploads/${item.image}`} alt='' />
-            <S.InnerItem className='fade-item'>
-              <div>
-                <h4>{item.title}</h4>
-                <p>{item.body}</p>
-              </div>
-              <S.CardFooter>{item.date.substr(0, 7)}</S.CardFooter>
-            </S.InnerItem>
-          </S.Col>
-        ))}
-    </S.Row>
+    <>
+      <S.Row>
+        {data &&
+          data.map((item, index) => (
+            <S.Col className='fade-col' ref={fadeCol[index]} key={index}>
+              <img src={`uploads/${item.image}`} alt='' />
+              <S.InnerItem className='fade-item'>
+                <div>
+                  <h4>{item.title}</h4>
+                  <p>{item.body}</p>
+                </div>
+                {/* <S.CardFooter>{item.date.substr(0, 7)}</S.CardFooter> */}
+              </S.InnerItem>
+            </S.Col>
+          ))}
+      </S.Row>
+      <BtnWrap>
+        <Button background='#50bcdf' onClick={() => handlePageChange()}>
+          More
+        </Button>
+      </BtnWrap>
+    </>
   );
 };
 

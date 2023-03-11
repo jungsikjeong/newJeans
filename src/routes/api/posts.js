@@ -27,15 +27,20 @@ function dataFun() {
 
 /** 모든 게시글 불러오기 */
 router.get('/', async (req, res) => {
+  const page = parseInt(req.query.page || '1', 10);
+
   try {
     const posts = await Post.find()
       .sort({
         date: -1,
       })
-      .limit(12);
-    // .skip(6);
+      .skip((page - 1) * 3)
+      .limit(3)
+      .lean();
 
-    res.json(posts);
+    const postCount = await Post.countDocuments().exec();
+
+    return res.json(posts);
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server Error');
@@ -106,7 +111,6 @@ router.post('/', isLogin, upload.single('file'), async (req, res) => {
   const { title, textBody, category } = JSON.parse(obj.data);
 
   const currentDate = dataFun();
-  console.log(obj);
   try {
     const newPost = new Post({
       title: title,
