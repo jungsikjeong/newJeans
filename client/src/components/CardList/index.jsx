@@ -23,10 +23,9 @@ const Card = ({ data, handlePageChange, page, lastPage }) => {
     fadeBtn.current.style.animationDelay = `${num}ms`;
   }, [data.length, fadeCol]);
 
+  // 처음 랜더링될때 data.length는 0으로나옴
   const disabled =
-    data.length === 0 || data.length === lastPage || data.length < 6;
-
-  console.log(lastPage);
+    data.length === 0 || data.length === lastPage || data.length < 12;
 
   return (
     <>

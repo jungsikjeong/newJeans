@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // 검색한 아이템 가져오기
@@ -7,6 +7,7 @@ export const fetchSearchItem = createAsyncThunk(
   async (text, { rejectWithValue }) => {
     try {
       const { data } = await axios.post(`/api/search?value=${text}`);
+
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data.errors);
@@ -18,9 +19,11 @@ export const fetchSearchItem = createAsyncThunk(
 export const fetchGetPosts = createAsyncThunk(
   'posts/fetchByPosts',
   async () => {
-    const { data } = await axios.get('/api/posts');
+    const { data, headers } = await axios.get('/api/posts');
 
-    return data;
+    const lastPage = parseInt(headers['last-page'], 10);
+
+    return { data, lastPage };
   }
 );
 
@@ -88,10 +91,13 @@ export const postsSlice = createSlice({
     builder
       .addCase(fetchGetPosts.pending, (state, action) => {
         state.loading = true;
+        state.posts = [];
+        state.lastPage = '';
       })
       .addCase(fetchGetPosts.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts = action.payload;
+        state.posts = action.payload.data;
+        state.lastPage = action.payload.lastPage;
         state.error = null;
       })
       .addCase(fetchGetPosts.rejected, (state, action) => {

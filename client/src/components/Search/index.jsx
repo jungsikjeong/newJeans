@@ -28,9 +28,7 @@ const Search = () => {
   };
 
   useEffect(() => {
-    return () => {
-      dispatch(clearPosts());
-    };
+    dispatch(clearPosts());
   }, []);
 
   return (

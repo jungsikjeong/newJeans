@@ -34,8 +34,8 @@ router.get('/', async (req, res) => {
       .sort({
         date: -1,
       })
-      .skip((page - 1) * 6)
-      .limit(6)
+      .skip((page - 1) * 12)
+      .limit(12)
       .lean();
 
     const postCount = await Post.countDocuments().exec();
