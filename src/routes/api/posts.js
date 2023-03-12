@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
   try {
     const posts = await Post.find()
       .sort({
-        date: -1,
+        _id: -1,
       })
       .skip((page - 1) * 12)
       .limit(12)
@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
 /** 마이페이지에서 내가 쓴글 불러오기 */
 router.get('/mypage', isLogin, async (req, res) => {
   try {
-    const posts = await Post.find({ user: req.user }).sort({ date: -1 });
+    const posts = await Post.find({ user: req.user }).sort({ _id: -1 });
 
     res.json(posts);
   } catch (error) {

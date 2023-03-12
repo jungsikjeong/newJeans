@@ -1,20 +1,21 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { clearPosts, nextPage } from '../store';
 import { fetchGetPosts, fetchPagination } from '../store/postsSlice';
 import CardList from './CardList';
 import Loading from './common/Loading';
 import NotPosts from './common/NotPosts';
 
-let page = 1;
-
 const Home = () => {
   let params;
 
   const dispatch = useDispatch();
-  const { posts, lastPage, loading } = useSelector((state) => state.posts);
+  const { posts, page, lastPage, loading } = useSelector(
+    (state) => state.posts
+  );
 
   const handlePageChange = async () => {
-    page++;
+    dispatch(nextPage());
 
     params = { page };
 
@@ -24,6 +25,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(fetchGetPosts());
   }, []);
+
   return (
     <>
       {loading && <Loading />}

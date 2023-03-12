@@ -21,7 +21,7 @@ import { FiSearch } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { Button } from '../common/Button.styled';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../store';
+import { clearPosts, logout } from '../../store';
 import { fetchSearchItem } from '../../store/postsSlice';
 
 const Header = () => {
@@ -92,6 +92,7 @@ const Header = () => {
 
   const handleSearch = (e) => {
     const text = e.target.textContent;
+    dispatch(clearPosts());
     dispatch(fetchSearchItem(text));
   };
 
