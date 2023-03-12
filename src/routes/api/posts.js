@@ -34,11 +34,13 @@ router.get('/', async (req, res) => {
       .sort({
         date: -1,
       })
-      .skip((page - 1) * 3)
-      .limit(3)
+      .skip((page - 1) * 6)
+      .limit(6)
       .lean();
 
     const postCount = await Post.countDocuments().exec();
+
+    res.header('Last-Page', postCount);
 
     return res.json(posts);
   } catch (error) {

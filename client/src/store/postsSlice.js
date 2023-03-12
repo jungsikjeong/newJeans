@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+// 검색한 아이템 가져오기
 export const fetchSearchItem = createAsyncThunk(
   'posts/fetchBySearchItem',
   async (text, { rejectWithValue }) => {
@@ -16,10 +17,22 @@ export const fetchSearchItem = createAsyncThunk(
 // 전체 게시글 가져오기
 export const fetchGetPosts = createAsyncThunk(
   'posts/fetchByPosts',
-  async (params) => {
-    const { data } = await axios.get('/api/posts', { params });
+  async () => {
+    const { data } = await axios.get('/api/posts');
 
     return data;
+  }
+);
+
+// 페이지네이션
+export const fetchPagination = createAsyncThunk(
+  'posts/fetchPagination',
+  async (params) => {
+    const { data, headers } = await axios.get('/api/posts', { params });
+
+    const lastPage = parseInt(headers['last-page'], 10);
+
+    return { data, lastPage };
   }
 );
 
@@ -56,6 +69,7 @@ export const postsSlice = createSlice({
     loading: false,
     posts: [],
     post: [],
+    lastPage: '',
     error: null,
   },
   reducers: {
@@ -74,7 +88,6 @@ export const postsSlice = createSlice({
     builder
       .addCase(fetchGetPosts.pending, (state, action) => {
         state.loading = true;
-        state.posts = [];
       })
       .addCase(fetchGetPosts.fulfilled, (state, action) => {
         state.loading = false;
@@ -83,6 +96,12 @@ export const postsSlice = createSlice({
       })
       .addCase(fetchGetPosts.rejected, (state, action) => {
         state.loading = false;
+      })
+
+      .addCase(fetchPagination.fulfilled, (state, action) => {
+        state.loading = false;
+        state.posts.push(...action.payload.data);
+        state.lastPage = action.payload.lastPage;
       })
 
       .addCase(fetchSearchItem.pending, (state, action) => {

@@ -14,6 +14,10 @@ export const Button = styled.button`
   background: ${(props) => (props.background ? props.background : '#f0f0f0')};
   cursor: pointer;
 
+  &:disabled {
+    display: none;
+  }
+
   &:hover {
     opacity: 0.8;
   }
