@@ -1,17 +1,19 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearPosts } from '../../store';
 import { fetchMyPageGetPosts } from '../../store/postsSlice';
+import { MdDeleteOutline } from 'react-icons/md';
+import { FaRegEdit } from 'react-icons/fa';
 import { CardFooter, Col, InnerItem, Row } from '../common/Card.styled';
 import EditProfile from '../Edit/EditProfile';
 import Button from '../Button';
 import Loading from '../common/Loading';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import setAuthToken from '../../utils/setAuthToken';
+import { loadUser } from '../../store';
 
-const Container = styled.div`
-  /* position: relative; */
-`;
+const Container = styled.div``;
 
 const Wrapper = styled.div`
   padding: 5rem 0;
@@ -31,12 +33,35 @@ const ImageWrap = styled.div`
   }
 `;
 
-const MyPage = () => {
+const PostEditWrap = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 17px;
+  margin: 0;
+  font-size: 25px;
+  display: flex;
+
+  .edit-icon {
+    &:hover {
+      color: yellow;
+    }
+  }
+
+  .remove-icon {
+    &:hover {
+      color: tomato;
+    }
+
+    font-size: 28px;
+  }
+`;
+
+const MyPage = ({ user }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user } = useSelector((state) => state.auth);
   const { posts, loading } = useSelector((state) => state.posts);
+
   const [editMode, setEditMode] = useState(false);
 
   const handleEditModeChange = () => {
@@ -47,14 +72,19 @@ const MyPage = () => {
     navigate(`/edit/post/${postId}`);
   };
 
-  useEffect(() => {
-    dispatch(fetchMyPageGetPosts());
-  }, [dispatch]);
+  const handleRemovePost = async (postId) => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      await axios.delete(`/api/posts/${postId}`).then((res) => {
+        if (res.status === 200) {
+          dispatch(fetchMyPageGetPosts());
+        }
+      });
+    }
+  };
 
   useEffect(() => {
-    return () => {
-      dispatch(clearPosts());
-    };
+    setAuthToken(JSON.parse(localStorage.token));
+    dispatch(fetchMyPageGetPosts());
   }, []);
 
   return (
@@ -78,6 +108,7 @@ const MyPage = () => {
               편집하기
             </Button>
           </Wrapper>
+
           <Row>
             {posts &&
               posts.map((post) => (
@@ -85,12 +116,22 @@ const MyPage = () => {
                   className='fade-item'
                   key={post._id}
                   style={{ cursor: 'pointer' }}
-                  onClick={() => handleEditPostPage(post._id)}
                 >
                   <img src={`uploads/${post.image}`} alt='' />
 
                   <InnerItem className='fade-item'>
-                    <div>
+                    <PostEditWrap>
+                      <FaRegEdit
+                        className='edit-icon'
+                        onClick={() => handleEditPostPage(post._id)}
+                      />
+
+                      <MdDeleteOutline
+                        className='remove-icon'
+                        onClick={() => handleRemovePost(post._id)}
+                      />
+                    </PostEditWrap>
+                    <div className='contents'>
                       <h4>{post.title}</h4>
                       <p>{post.body}</p>
                     </div>

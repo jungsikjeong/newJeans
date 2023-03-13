@@ -75,11 +75,13 @@ export const fetchGetPost = createAsyncThunk(
   }
 );
 
+// 마이페이지 게시글 가져오기
 export const fetchMyPageGetPosts = createAsyncThunk(
   'posts/fetchMyPageGetPosts',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get('/api/posts/mypage');
+      // console.log(axios.defaults.headers.common['Authorization']);
+      const { data } = await axios.get('/api/users/mypage');
 
       return data;
     } catch (error) {

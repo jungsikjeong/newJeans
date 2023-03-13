@@ -55,7 +55,7 @@ const App = () => {
           <Route path='/register' element={<Register />} />
           <Route path='/decoration' element={<CardDeco user={user} />} />
           <Route path='/writer' element={<Writer user={user} />} />
-          <Route path='/mypage' element={<MyPage />} />
+          <Route path='/mypage' element={<MyPage user={user} />} />
           <Route path='/edit/post/:id' element={<EditPostPage user={user} />} />
         </Routes>
       </ThemeProvider>

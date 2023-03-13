@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearPosts, nextPage } from '../store';
+import { nextPage } from '../store';
 import { fetchGetPosts, fetchPagination } from '../store/postsSlice';
 import CardList from './CardList';
 import Loading from './common/Loading';

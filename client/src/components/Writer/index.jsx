@@ -343,7 +343,7 @@ const Writer = ({ user }) => {
               <img src={canvasImage} alt='' />
 
               <InnerItemStyle className='inner-item'>
-                <div>
+                <div className='contents'>
                   <h4>{title}</h4>
                   <p>{textBody}</p>
                 </div>

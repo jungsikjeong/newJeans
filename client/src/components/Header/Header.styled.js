@@ -67,7 +67,7 @@ export const List = styled.ul`
   font-family: 'Dongle', sans-serif;
   width: 100%;
   height: 100%;
-  display: ${(props) => (props.disabled ? 'none' : 'flex')};
+  display: ${(props) => (props.show ? 'flex' : 'none')};
   justify-content: center;
   align-items: center;
   padding-right: 50px;

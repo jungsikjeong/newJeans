@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   position: relative;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 `;
 
 export const Wrapper = styled.div`
@@ -30,7 +30,6 @@ export const SideNav = styled.div`
       display: flex;
       justify-content: center;
       width: 100%;
-
       padding: 10px 0px;
       /* padding-bottom: 10px; */
     }
@@ -81,11 +80,15 @@ export const SideNav = styled.div`
 
 export const Main = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    width: 350px;
-    height: 450px;
+    width: 100%;
+    max-width: 300px;
+    height: 460px;
     margin-top: ${(props) => (props.menuClick ? '280px' : '100px')};
   }
 
+  width: 100%;
+  max-width: 300px;
+  height: 460px;
   transition: all 0.3s;
   background-color: ${(props) => (props.backgroundColor ? 'white' : '')};
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);

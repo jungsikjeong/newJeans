@@ -49,18 +49,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-/** 마이페이지에서 내가 쓴글 불러오기 */
-router.get('/mypage', isLogin, async (req, res) => {
-  try {
-    const posts = await Post.find({ user: req.user }).sort({ _id: -1 });
-
-    res.json(posts);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server Error');
-  }
-});
-
 /** 특정 게시글 불러오기 */
 router.get('/:id', async (req, res) => {
   try {
@@ -107,12 +95,25 @@ router.put('/:id', isLogin, upload.single('file'), async (req, res) => {
   }
 });
 
+/** 특정 게시글 삭제하기 */
+router.delete('/:id', isLogin, async (req, res) => {
+  try {
+    await Post.deleteOne({ _id: req.params.id });
+
+    res.status(200).json({ status: 'ok' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 /** 게시글 작성 */
 router.post('/', isLogin, upload.single('file'), async (req, res) => {
   const obj = JSON.parse(JSON.stringify(req.body));
   const { title, textBody, category } = JSON.parse(obj.data);
 
   const currentDate = dataFun();
+
   try {
     const newPost = new Post({
       title: title,

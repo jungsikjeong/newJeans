@@ -123,7 +123,7 @@ const Header = () => {
         <h1>NewJeans</h1>
       </Logo>
 
-      <List disabled={location.pathname === '/mypage'}>
+      <List show={location.pathname === '/'}>
         <Item color='#f7e600' onClick={(e) => handleSearch(e)}>
           <span>민지</span>
         </Item>

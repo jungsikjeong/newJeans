@@ -5,6 +5,7 @@ import {
   Text,
   Image as KonvaImage,
   Transformer,
+  Circle,
 } from 'react-konva';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -46,12 +47,33 @@ const StickerImage = ({
   shapeProps,
   onChange,
   onDragStart,
+  onDelete,
+  unSelectShape,
   isDragging,
 }) => {
   const [image] = useImage(url);
 
   const shapeRef = useRef();
+  const deleteBtnRef = useRef();
   const trRef = useRef();
+
+  const onMouseEnter = (e) => {
+    if (isSelected) {
+      e.target.getStage().container().style.cursor = 'move';
+    }
+    if (!isSelected) {
+      e.target.getStage().container().style.cursor = 'pointer';
+    }
+  };
+
+  const onMouseLeave = (e) => {
+    e.target.getStage().container().style.cursor = 'default';
+  };
+
+  const handleDelete = () => {
+    unSelectShape(null);
+    onDelete(shapeRef.current);
+  };
 
   useEffect(() => {
     if (isSelected) {
@@ -70,9 +92,11 @@ const StickerImage = ({
         {...shapeProps}
         x={150}
         y={250}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
         image={image}
-        width={200}
-        height={150}
+        width={100}
+        height={100}
         scaleX={isDragging ? 1.2 : 1}
         scaleY={isDragging ? 1.2 : 1}
         draggable={true}
@@ -96,7 +120,15 @@ const StickerImage = ({
             }
             return newBox;
           }}
-        />
+        >
+          <Circle
+            radius={8}
+            fill='red'
+            ref={deleteBtnRef}
+            onClick={() => handleDelete()}
+            // x={shapeRef.current?.width() * 1}
+          ></Circle>
+        </Transformer>
       )}
     </>
   );
@@ -114,11 +146,31 @@ const TextFiled = ({
   text,
   isDragging,
   onDragStart,
-  position,
+  onDelete,
+  unSelectShape,
   stageRef,
 }) => {
   const shapeRef = useRef();
   const trRef = useRef();
+  const deleteBtnRef = useRef();
+
+  const onMouseEnter = (e) => {
+    if (isSelected) {
+      e.target.getStage().container().style.cursor = 'move';
+    }
+    if (!isSelected) {
+      e.target.getStage().container().style.cursor = 'pointer';
+    }
+  };
+
+  const onMouseLeave = (e) => {
+    e.target.getStage().container().style.cursor = 'default';
+  };
+
+  const handleDelete = () => {
+    unSelectShape(null);
+    onDelete(shapeRef.current);
+  };
 
   useEffect(() => {
     if (isSelected) {
@@ -135,9 +187,11 @@ const TextFiled = ({
         onTap={onSelect}
         ref={shapeRef}
         {...shapeProps}
-        draggable
+        draggable='true'
         x={x}
         y={y}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
         fill={fill ? fill : 'black'}
         fontSize={fontSize}
         text={text}
@@ -165,7 +219,15 @@ const TextFiled = ({
             }
             return newBox;
           }}
-        />
+        >
+          <Circle
+            radius={8}
+            fill='red'
+            ref={deleteBtnRef}
+            onClick={() => handleDelete()}
+            // x={shapeRef.current.width() * 1}
+          ></Circle>
+        </Transformer>
       )}
     </>
   );
@@ -179,7 +241,7 @@ const CardDeco = ({ user }) => {
 
   const { textMenu, sicker } = toggle;
 
-  const [width, setWidth] = useState(500);
+  const [width, setWidth] = useState(300);
   const [tag, setTag] = useState('');
 
   const [texts, setTexts] = useState([]);
@@ -295,6 +357,24 @@ const CardDeco = ({ user }) => {
     }
   };
 
+  const unSelectShape = (prop) => {
+    selectShape(prop);
+  };
+
+  // 스티커 삭제
+  const handleDeleteImage = (node) => {
+    const newStickers = [...stickers];
+    newStickers.splice(node.index, 1);
+    setStickers(newStickers);
+  };
+
+  // 글씨 삭제
+  const handleDeleteText = (node) => {
+    const newTexts = [...texts];
+    newTexts.splice(node.index, 1);
+    setTexts(newTexts);
+  };
+
   /** 작성된 카드 보내기 */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -309,9 +389,9 @@ const CardDeco = ({ user }) => {
   useEffect(() => {
     const resizeListener = () => {
       if (window.innerWidth <= 513) {
-        setWidth(350);
+        setWidth(300);
       } else {
-        setWidth(500);
+        setWidth(300);
       }
     };
 
@@ -386,7 +466,7 @@ const CardDeco = ({ user }) => {
               <Stage
                 ref={stageRef}
                 width={width}
-                height={500}
+                height={460}
                 onMouseDown={handleCheckDeselect}
                 onTouchStart={handleCheckDeselect}
               >
@@ -417,7 +497,9 @@ const CardDeco = ({ user }) => {
                         }}
                         isDragging={text.isDragging}
                         onDragStart={handleTextDragStart}
-                        text={text.text && text.text}
+                        onDelete={handleDeleteText}
+                        unSelectShape={unSelectShape}
+                        text={text.text}
                         x={150}
                         y={250}
                         fill={text.color ? text.color : 'black'}
@@ -442,6 +524,8 @@ const CardDeco = ({ user }) => {
                           setStickers(rects);
                         }}
                         onDragStart={handleStickerDragStart}
+                        unSelectShape={unSelectShape}
+                        onDelete={handleDeleteImage}
                       />
                     ))}
                 </Layer>

@@ -49,7 +49,7 @@ export const InnerItem = styled.div`
   background: rgba(0, 0, 0, 0.4);
   overflow: hidden;
 
-  div {
+  .contents {
     text-align: center;
     margin-top: 50px;
 

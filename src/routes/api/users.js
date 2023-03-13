@@ -1,11 +1,24 @@
 const express = require('express');
-const passport = require('passport');
 const router = express.Router();
 
-const isLogin = require('../../middleware/isLogin');
+const passport = require('passport');
+
 const bcrypt = require('bcrypt');
 
+const isLogin = require('../../middleware/isLogin');
 const User = require('../../models/User');
+const Post = require('../../models/Post');
+
+/** 마이페이지에서 내가 쓴글 불러오기 */
+router.get('/mypage', isLogin, async (req, res) => {
+  try {
+    const posts = await Post.find({ user: req.user }).sort({ _id: -1 });
+    res.json(posts);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // 유저 정보 변경
 router.post('/edit/profile', isLogin, async (req, res) => {

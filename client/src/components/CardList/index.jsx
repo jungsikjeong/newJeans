@@ -35,7 +35,7 @@ const Card = ({ data, handlePageChange, page, lastPage }) => {
             <S.Col className='fade-col' ref={fadeCol[index]} key={index}>
               <img src={`uploads/${item.image}`} alt='' />
               <S.InnerItem className='fade-item'>
-                <div>
+                <div className='contents'>
                   <h4>{item.title}</h4>
                   <p>{item.body}</p>
                 </div>

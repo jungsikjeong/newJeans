@@ -83,7 +83,7 @@ const Search = () => {
             <Col className='fade-col' key={index}>
               <img src={`uploads/${item.image}`} alt='' />
               <InnerItem className='fade-item'>
-                <div>
+                <div className='contents'>
                   <h4>{item.title}</h4>
                   <p>{item.body}</p>
                 </div>

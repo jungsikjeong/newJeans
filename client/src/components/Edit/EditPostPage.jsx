@@ -346,7 +346,7 @@ const EditPostPage = ({ user }) => {
             <img src={canvasImage ? canvasImage : ''} alt='' />
 
             <InnerItemStyle className='inner-item'>
-              <div>
+              <div className='contents'>
                 <h4>{title ? title : post.title}</h4>
                 <p>{textBody ? textBody : post.body}</p>
               </div>
