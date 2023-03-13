@@ -1,5 +1,5 @@
 import * as S from '../common/Auth.styled';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
 import { loadUser } from '../../store';
@@ -10,6 +10,7 @@ import axios from 'axios';
 import setAuthToken from '../../utils/setAuthToken';
 
 const Login = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -91,7 +92,10 @@ const Login = () => {
 
   return (
     <S.Container>
-      <S.Wrapper className='fade-item'>
+      <S.Wrapper
+        className='fade-item'
+        loginPage={location.pathname === '/login'}
+      >
         <S.IconWrap onClick={() => navigator('/')}>
           <GrClose />
         </S.IconWrap>

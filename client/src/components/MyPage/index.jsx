@@ -83,6 +83,7 @@ const MyPage = ({ user }) => {
   };
 
   useEffect(() => {
+    // 왜인지모르겠으나, 토큰인증실패가떠서 setAuthToken()코드를 한번 더 작성해줬음
     setAuthToken(JSON.parse(localStorage.token));
     dispatch(fetchMyPageGetPosts());
   }, []);

@@ -5,12 +5,13 @@ export const Container = styled.div``;
 export const Wrapper = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 350px;
+    margin-top: 150px;
   }
   background-color: white;
   position: relative;
   width: 500px;
   margin: auto;
-  margin-top: 100px;
+  margin-top: ${(props) => (props.loginPage ? '300px' : '150px')};
   border: 1px solid #eee;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 `;
