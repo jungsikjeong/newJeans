@@ -150,7 +150,10 @@ const Header = () => {
                   src={headerImg}
                   alt=''
                   onClick={() => handleMenu()}
-                  mypage={location.pathname === '/mypage'}
+                  styleSize={
+                    location.pathname === '/mypage' ||
+                    location.pathname === '/search'
+                  }
                 />
               )}
             </>

@@ -117,7 +117,7 @@ export const Item = styled.li`
 
 export const Img = styled.img`
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    width: ${(props) => (props.mypage ? '45px' : '100px')};
+    width: ${(props) => (props.styleSize ? '45px' : '100px')};
   }
   width: 60px;
   height: 100%;

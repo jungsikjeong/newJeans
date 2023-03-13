@@ -18,7 +18,6 @@ export const Row = styled.div`
     grid-template-columns: repeat(2, 1fr);
   }
   @media (max-width: 500px) {
-    gap: 5px;
     grid-template-columns: repeat(1, 1fr);
   }
 `;
@@ -27,6 +26,7 @@ export const Col = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     /* height: 300px; */
     height: 100%;
+    padding: 10px;
   }
   position: relative;
   width: 100%;
