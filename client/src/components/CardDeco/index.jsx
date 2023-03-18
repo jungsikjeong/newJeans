@@ -264,7 +264,7 @@ const CardDeco = ({ user }) => {
         setToggle({ textMenu: !textMenu });
         break;
 
-      case 'sicker': // if (x === 'value2')
+      case 'sicker':
         setToggle({ sicker: !sicker });
         break;
 
