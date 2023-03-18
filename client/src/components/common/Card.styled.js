@@ -24,8 +24,8 @@ export const Row = styled.div`
 
 export const Col = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    /* height: 300px; */
-    height: 100%;
+    /* height: 100%; */
+    height: 450px;
     padding: 10px;
   }
   position: relative;

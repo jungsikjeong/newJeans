@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeCanvasImage, clearPosts } from '../../store';
+import { changeCanvasImage } from '../../store';
 import { categoriesData } from '../../utils/categoriesData';
 import { Button } from '../common/Button.styled';
 import { CardFooter, InnerItem } from '../common/Card.styled';
@@ -9,7 +9,7 @@ import FileUpload from '../CardDeco/SideMenu/FileUpload';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchGetPost } from '../../store/postsSlice';
 import Loading from '../common/Loading';
-import axios from 'axios';
+import { api } from '../../utils/api';
 
 const Container = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
@@ -238,8 +238,8 @@ const EditPostPage = ({ user }) => {
       header: { 'content-type': 'multipart/form-data' },
     };
 
-    await axios
-      .put(`/api/posts/${id}`, image ? formData : body, config)
+    await api
+      .put(`/posts/${id}`, image ? formData : body, config)
       .then((response) => {
         if (response.data) {
           setMessage({ titleError: '', bodyError: '' });
@@ -275,6 +275,18 @@ const EditPostPage = ({ user }) => {
       dispatch(changeCanvasImage(`/uploads/${post.image}`));
     }
   }, [post, dispatch]);
+
+  useEffect(() => {
+    return () => {
+      setTitle('');
+      setTextBody('');
+      setIsImage('');
+      setMessage({ titleError: '', bodyError: '' });
+      setSubmitBtnColor('rgb(134,179,219)');
+      setSelectedCategory('민지');
+      dispatch(changeCanvasImage(''));
+    };
+  }, []);
   return (
     <>
       {loading && <Loading />}

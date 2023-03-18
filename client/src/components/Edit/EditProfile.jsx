@@ -7,6 +7,7 @@ import SliderCompo from '../Slider';
 import Button from '../Button';
 import axios from 'axios';
 import { loadUser } from '../../store';
+import { api } from '../../utils/api';
 
 const Container = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
@@ -85,9 +86,9 @@ const EditProfile = ({ user, handleEditModeChange }) => {
         }
       }
 
-      axios({
+      api({
         method: 'post',
-        url: '/api/users/edit/profile',
+        url: '/users/edit/profile',
         data: {
           nickname: nicknameMode ? nickname : '',
           password: passwordMode ? password : '',
@@ -98,8 +99,8 @@ const EditProfile = ({ user, handleEditModeChange }) => {
       })
         .then((res) => {
           if (res.status === 200) {
-            axios
-              .get('/api/auth')
+            api
+              .get('/auth')
               .then((res) =>
                 dispatch(
                   loadUser(res.data.user),

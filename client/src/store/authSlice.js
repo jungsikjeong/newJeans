@@ -1,4 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { api } from '../utils/api';
+
+// 페이지네이션
+export const fetchByAuth = createAsyncThunk('auth/fetchByAuth', async () => {
+  const { data } = await api.get('/auth');
+
+  return data;
+});
 
 export const authSlice = createSlice({
   name: 'authSlice',
@@ -7,14 +15,25 @@ export const authSlice = createSlice({
     isAuthenticated: false,
   },
   reducers: {
-    loadUser(state, action) {
-      state.user = action.payload;
-      localStorage.setItem('userInfo', JSON.stringify(action.payload));
-      state.isAuthenticated = true;
-    },
     logout(state, action) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userInfo');
       state.user = null;
       state.isAuthenticated = false;
     },
+  },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchByAuth.pending, (state, action) => {
+        state.user = '';
+      })
+      .addCase(fetchByAuth.fulfilled, (state, action) => {
+        localStorage.setItem('userInfo', JSON.stringify(action.payload.user));
+        state.user = action.payload.user;
+      })
+      .addCase(fetchByAuth.rejected, (state, action) => {
+        state.user = '';
+      });
   },
 });

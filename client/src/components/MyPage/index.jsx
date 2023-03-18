@@ -9,9 +9,7 @@ import EditProfile from '../Edit/EditProfile';
 import Button from '../Button';
 import Loading from '../common/Loading';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import setAuthToken from '../../utils/setAuthToken';
-import { loadUser } from '../../store';
+import { api } from '../../utils/api';
 
 const Container = styled.div``;
 
@@ -24,11 +22,12 @@ const Wrapper = styled.div`
 `;
 
 const ImageWrap = styled.div`
+  border-radius: 50%;
   img {
     width: 100%;
     max-width: 150px;
     height: 100px;
-    border-radius: 4rem;
+    border-radius: 50%;
     margin-bottom: 1rem;
   }
 `;
@@ -74,7 +73,7 @@ const MyPage = ({ user }) => {
 
   const handleRemovePost = async (postId) => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
-      await axios.delete(`/api/posts/${postId}`).then((res) => {
+      await api.delete(`/posts/${postId}`).then((res) => {
         if (res.status === 200) {
           dispatch(fetchMyPageGetPosts());
         }
@@ -83,8 +82,6 @@ const MyPage = ({ user }) => {
   };
 
   useEffect(() => {
-    // 왜인지모르겠으나, 토큰인증실패가떠서 setAuthToken()코드를 한번 더 작성해줬음
-    setAuthToken(JSON.parse(localStorage.token));
     dispatch(fetchMyPageGetPosts());
   }, []);
 

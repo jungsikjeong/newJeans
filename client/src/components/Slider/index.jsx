@@ -5,7 +5,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import img1 from '../../assets/images/민지.jpg';
 import img2 from '../../assets/images/하니.jpg';
 import img3 from '../../assets/images/해린.jpg';
-import img4 from '../../assets/images/다니엘.jpg';
+import img4 from '../../assets/images/다니.jpg';
 import img5 from '../../assets/images/혜인.jpg';
 import { useEffect, useState } from 'react';
 
@@ -27,7 +27,7 @@ const data = [
   },
   {
     id: 3,
-    name: '다니엘',
+    name: '다니',
     src: img4,
   },
   {
@@ -56,6 +56,7 @@ const SliderCompo = ({ handleAvatarChange, avatar }) => {
       const avatarName = avatar.substr(14, 2);
 
       const { id } = data.find((item) => item.name === avatarName);
+
       setInitialSlideNumber(id);
     } else {
       setInitialSlideNumber(0);

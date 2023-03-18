@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { api } from '../utils/api';
 
 // 검색한 아이템 가져오기
 export const fetchSearchItem = createAsyncThunk(
@@ -81,7 +82,7 @@ export const fetchMyPageGetPosts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       // console.log(axios.defaults.headers.common['Authorization']);
-      const { data } = await axios.get('/api/users/mypage');
+      const { data } = await api.get('/users/mypage');
 
       return data;
     } catch (error) {

@@ -12,6 +12,7 @@ router.get('/', async (req, res, next) =>
   passport.authenticate('jwt', { session: false }, async (err, user, info) => {
     // console.log(req.header('Authorization'));
     // passport.jwt token === undefined
+
     if (info) {
       return res
         .status(401)
@@ -93,7 +94,9 @@ router.post('/login', async (req, res, next) => {
         if (error) return next(error);
 
         const body = { _id: user._id, userId: user.userId };
-        const token = jwt.sign({ user: body }, process.env.JWT_SECRET_KEY);
+        const token = jwt.sign({ user: body }, process.env.JWT_SECRET_KEY, {
+          expiresIn: 100,
+        });
 
         return res.json({ token });
       });

@@ -12,11 +12,9 @@ import Home from './components/Home';
 import Writer from './components/Writer';
 import Search from './components/Search';
 
-import { loadUser } from './store';
-import setAuthToken from './utils/setAuthToken';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import EditPostPage from './components/Edit/EditPostPage';
+import { fetchByAuth } from './store/authSlice';
 
 const theme = {
   colors: {
@@ -33,15 +31,10 @@ const App = () => {
 
   const dispatch = useDispatch();
 
-  const token = JSON.parse(localStorage.getItem('token'));
-
   useEffect(() => {
-    /**토큰으로 유저 정보를 user state에 담아줌*/
-    if (token) {
-      setAuthToken(JSON.parse(localStorage.token));
-      axios.get('/api/auth').then((res) => dispatch(loadUser(res.data.user)));
-    }
-  }, [token, dispatch]);
+    // api.get('/auth').then((res) => dispatch(loadUser(res.data.user)));
+    dispatch(fetchByAuth());
+  }, []);
 
   return (
     <>

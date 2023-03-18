@@ -8,8 +8,7 @@ import img1 from '../../assets/images/민지.jpg';
 import Button from '../Button';
 import SliderCompo from '../Slider';
 import { useDispatch, useSelector } from 'react-redux';
-import setAuthToken from '../../utils/setAuthToken';
-import { loadUser } from '../../store';
+import { fetchByAuth } from '../../store/authSlice';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -85,11 +84,9 @@ const Register = () => {
       .then((res) => {
         if (res.data?.token) {
           localStorage.setItem('token', JSON.stringify(res.data.token));
-          setAuthToken(JSON.parse(localStorage.token));
 
-          axios
-            .get('/api/auth')
-            .then((res) => dispatch(loadUser(res.data.user), navigator('/')));
+          dispatch(fetchByAuth());
+          navigator('/');
         }
       })
       .catch((err) => {

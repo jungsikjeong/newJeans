@@ -7,8 +7,8 @@ import { date } from '../../utils/date';
 import { Button } from '../common/Button.styled';
 import { CardFooter, InnerItem } from '../common/Card.styled';
 import FileUpload from '../CardDeco/SideMenu/FileUpload';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../../utils/api';
 
 const Container = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
@@ -188,7 +188,7 @@ const Writer = ({ user }) => {
     setSubmitBtnColor('rgb(134,179,219)');
     setSelectedCategory('민지');
     dispatch(changeCanvasImage(''));
-    navigate('/');
+    navigate(-1);
   };
 
   const handleSubmit = async (e) => {
@@ -246,8 +246,8 @@ const Writer = ({ user }) => {
       header: { 'content-type': 'multipart/form-data' },
     };
 
-    await axios
-      .post('/api/posts', formData, config)
+    await api
+      .post('/posts', formData, config)
       .then((response) => {
         if (response.data) {
           setTitle('');

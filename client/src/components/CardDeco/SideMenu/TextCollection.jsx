@@ -68,7 +68,7 @@ const Guide = styled.section`
 
 const Colors = styled.section`
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    overflow: scroll;
+    overflow-x: scroll;
   }
 
   padding: 12px;

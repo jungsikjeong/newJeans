@@ -82,8 +82,6 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userInfo');
     dispatch(logout());
     setIsOpen(false);
     setIsMenu(false);
@@ -150,10 +148,7 @@ const Header = () => {
                   src={headerImg}
                   alt=''
                   onClick={() => handleMenu()}
-                  styleSize={
-                    location.pathname === '/mypage' ||
-                    location.pathname === '/search'
-                  }
+                  styleSize={location.pathname === '/'}
                 />
               )}
             </>
