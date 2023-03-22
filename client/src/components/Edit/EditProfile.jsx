@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { GrClose } from 'react-icons/gr';
 import SliderCompo from '../Slider';
 import Button from '../Button';
-import axios from 'axios';
 import { loadUser } from '../../store';
 import { api } from '../../utils/api';
 

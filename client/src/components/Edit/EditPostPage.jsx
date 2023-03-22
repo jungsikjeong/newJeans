@@ -287,6 +287,7 @@ const EditPostPage = ({ user }) => {
       dispatch(changeCanvasImage(''));
     };
   }, []);
+
   return (
     <>
       {loading && <Loading />}

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { api } from '../utils/api';
 
-// 페이지네이션
+// 유저 인증
 export const fetchByAuth = createAsyncThunk('auth/fetchByAuth', async () => {
   const { data } = await api.get('/auth');
 
